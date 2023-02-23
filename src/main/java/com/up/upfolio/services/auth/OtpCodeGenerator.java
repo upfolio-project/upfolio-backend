@@ -1,4 +1,4 @@
-package com.up.upfolio.services;
+package com.up.upfolio.services.auth;
 
 import com.up.upfolio.exceptions.GenericInternalException;
 import org.springframework.stereotype.Component;
@@ -7,7 +7,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 @Component
-public class OTPCodeGenerator {
+public class OtpCodeGenerator {
     public String generateCode() {
         byte[] bytes = new byte[4];
 

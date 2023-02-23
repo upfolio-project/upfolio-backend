@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class JWTSuccessAuthResponse extends BaseApiResponse {
+public class JwtSuccessAuthResponse extends BaseApiResponse {
     private String token;
     private String refreshToken;
 }

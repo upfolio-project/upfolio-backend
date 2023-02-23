@@ -10,6 +10,7 @@ import java.util.List;
 @Setter
 public class ProfileModel {
     private String username;
+    private UserRealNameModel realName;
     private String dateOfBirth;
     private String profilePhotoUrl;
     private ProfileType type;
