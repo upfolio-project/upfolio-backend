@@ -1,6 +1,6 @@
 package com.up.upfolio;
 
-import com.up.upfolio.services.OTPCodeGenerator;
+import com.up.upfolio.services.auth.OtpCodeGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 class UpfolioApplicationTests {
 	@Autowired
-	private OTPCodeGenerator otpCodeGenerator;
+	private OtpCodeGenerator otpCodeGenerator;
 
 	@Test
 	void contextLoads() {

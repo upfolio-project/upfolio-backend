@@ -1,5 +1,6 @@
 package com.up.upfolio.model.user;
 
+import com.up.upfolio.entities.UserRealNameModel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +11,7 @@ import java.util.List;
 @Setter
 public class ProfileModel {
     private String username;
+    private UserRealNameModel realName;
     private String dateOfBirth;
     private String profilePhotoUrl;
     private ProfileType type;
