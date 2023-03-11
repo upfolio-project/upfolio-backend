@@ -54,6 +54,8 @@ public class SecurityConfig {
                         .requestMatchers("/v1/authorize/**").permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/v1/register/**").permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/v3/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/favicon.ico").permitAll()
                         .anyRequest().authenticated()
