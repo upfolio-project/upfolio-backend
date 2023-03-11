@@ -26,12 +26,12 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final UserRepository userRepository;
     private final JwtAuthenticationService jwtAuthenticationService;
     private final Base64.Encoder base64Encoder = Base64.getUrlEncoder();
-    private final SecureRandom secureRandom = new SecureRandom();
+    private final SecureRandom secureRandom;
 
     private static final int MAX_REGISTRATIONS = 100;
 
     public RegistrationServiceImpl(OtpCodeGenerator otpCodeGenerator, PasswordEncoder passwordEncoder, PhoneNumberNormalizer phoneNumberNormalizer,
-                                   UserRepository userRepository, JwtAuthenticationService jwtAuthenticationService) {
+                                   UserRepository userRepository, JwtAuthenticationService jwtAuthenticationService, SecureRandom secureRandom) {
 
         stateHolder = CacheBuilder.newBuilder().maximumSize(MAX_REGISTRATIONS).build();
 
@@ -40,6 +40,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         this.userRepository = userRepository;
         this.jwtAuthenticationService = jwtAuthenticationService;
         this.otpCodeGenerator = otpCodeGenerator;
+        this.secureRandom = secureRandom;
     }
 
     @Override
