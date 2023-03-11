@@ -14,6 +14,7 @@ public class RegistrationState {
 
     private Step step;
     private String otpCode;
+    private String phoneNumber;
 
     public RegistrationState() {
         step = Step.WAIT_FOR_PHONE_NUMBER;
