@@ -1,5 +1,6 @@
 package com.up.upfolio.model.user;
 
+import com.up.upfolio.entities.UserRealNameModel;
 import lombok.Getter;
 import lombok.Setter;
 
