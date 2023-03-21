@@ -4,11 +4,13 @@ import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.io.Serializable;
+
 @Setter
 @Getter
 @AllArgsConstructor
 @Embeddable
-public class UserRealNameModel {
+public class UserRealNameModel implements Serializable {
     private static final int MAX_FIELD_LENGTH = 30;
 
     @NotBlank(message = "First name must be non-empty")
