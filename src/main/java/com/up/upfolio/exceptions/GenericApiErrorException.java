@@ -6,6 +6,8 @@ import lombok.Getter;
 import java.time.OffsetDateTime;
 
 public class GenericApiErrorException extends RuntimeException {
+    public static GenericApiErrorException NOT_IMPLEMENTED = new GenericApiErrorException(501, "This feature is not implemented yet");
+
     @Getter
     private final int status;
 
