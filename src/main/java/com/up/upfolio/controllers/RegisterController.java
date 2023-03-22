@@ -9,6 +9,7 @@ import com.up.upfolio.model.api.response.auth.JwtSuccessAuthResponse;
 import com.up.upfolio.model.api.response.SuccessResponse;
 import com.up.upfolio.model.api.response.auth.RegisterTokenResponse;
 import com.up.upfolio.services.auth.RegistrationService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,15 +26,15 @@ public class RegisterController extends BaseController {
     }
 
     @PostMapping("/phoneNumber")
-    public SuccessResponse commenceByPhoneNumber(@RequestBody RegisterByPhoneNumberRequest request) {
-        registrationService.sendOtpCode(request.registerToken(), request.phoneNumber());
+    public SuccessResponse commenceByPhoneNumber(@RequestBody @Valid RegisterByPhoneNumberRequest request) {
+        registrationService.sendOtpCode(request.getRegisterToken(), request.getPhoneNumber());
 
         return new SuccessResponse();
     }
 
     @PostMapping("/confirm")
-    public SuccessResponse confirmPhoneOTP(@RequestBody ConfirmPhoneOtpRequest request) {
-        boolean ok = registrationService.verifyOtpCode(request.registerToken(), request.code());
+    public SuccessResponse confirmPhoneOTP(@RequestBody @Valid ConfirmPhoneOtpRequest request) {
+        boolean ok = registrationService.verifyOtpCode(request.getRegisterToken(), request.getCode());
 
         if (!ok) {
             throw new GenericApiErrorException(403, "Invalid OTP code");
@@ -43,8 +44,8 @@ public class RegisterController extends BaseController {
     }
 
     @PostMapping("/finish")
-    public JwtSuccessAuthResponse finish(@RequestBody FinishRegistrationRequest request) {
-        return registrationService.finish(request.registerToken(),
-                new UserRealNameModel(request.firstName(), request.lastName()), request.password());
+    public JwtSuccessAuthResponse finish(@RequestBody @Valid FinishRegistrationRequest request) {
+        return registrationService.finish(request.getRegisterToken(),
+                new UserRealNameModel(request.getFirstName(), request.getLastName()), request.getPassword());
     }
 }

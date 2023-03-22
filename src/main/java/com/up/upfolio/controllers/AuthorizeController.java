@@ -6,6 +6,7 @@ import com.up.upfolio.model.api.request.auth.AuthorizeByPasswordRequest;
 import com.up.upfolio.model.api.response.auth.JwtSuccessAuthResponse;
 import com.up.upfolio.repositories.UserRepository;
 import com.up.upfolio.services.auth.JwtAuthenticationService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +23,7 @@ public class AuthorizeController extends BaseController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/byPassword")
-    public JwtSuccessAuthResponse byPassword(@RequestBody AuthorizeByPasswordRequest request) {
+    public JwtSuccessAuthResponse byPassword(@RequestBody @Valid AuthorizeByPasswordRequest request) {
         User user = userRepository.findByPhoneNumber(request.getPhoneNumber()).orElseThrow(() -> new GenericApiErrorException("The account with this phone number is not found"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash()))
