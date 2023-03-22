@@ -23,9 +23,9 @@ public class AuthorizeController extends BaseController {
 
     @PostMapping("/byPassword")
     public JwtSuccessAuthResponse byPassword(@RequestBody AuthorizeByPasswordRequest request) {
-        User user = userRepository.findByPhoneNumber(request.phoneNumber()).orElseThrow(() -> new GenericApiErrorException("The account with this phone number is not found"));
+        User user = userRepository.findByPhoneNumber(request.getPhoneNumber()).orElseThrow(() -> new GenericApiErrorException("The account with this phone number is not found"));
 
-        if (!passwordEncoder.matches(request.password(), user.getPasswordHash()))
+        if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash()))
             throw new GenericApiErrorException(403, "Password is incorrect");
 
         String jwtToken = jwtAuthenticationService.generate(user.getUuid());
