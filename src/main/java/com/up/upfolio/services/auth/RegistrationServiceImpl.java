@@ -5,8 +5,11 @@ import com.google.common.cache.CacheBuilder;
 import com.up.upfolio.entities.User;
 import com.up.upfolio.exceptions.GenericApiErrorException;
 import com.up.upfolio.model.api.response.auth.JwtSuccessAuthResponse;
-import com.up.upfolio.entities.UserRealNameModel;
+import com.up.upfolio.entities.UserRealName;
 import com.up.upfolio.repositories.UserRepository;
+import com.up.upfolio.services.auth.otp.OtpCodeGenerator;
+import com.up.upfolio.services.auth.otp.OtpCodeTransmitter;
+import com.up.upfolio.services.profile.ProfileService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,11 +30,15 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final JwtAuthenticationService jwtAuthenticationService;
     private final Base64.Encoder base64Encoder = Base64.getUrlEncoder();
     private final SecureRandom secureRandom;
+    private final OtpCodeTransmitter otpCodeTransmitter;
+    private final ProfileService profileService;
 
     private static final int MAX_REGISTRATIONS = 100;
+    private static final int MAX_OTP_ATTEMPTS = 5;
 
     public RegistrationServiceImpl(OtpCodeGenerator otpCodeGenerator, PasswordEncoder passwordEncoder, PhoneNumberNormalizer phoneNumberNormalizer,
-                                   UserRepository userRepository, JwtAuthenticationService jwtAuthenticationService, SecureRandom secureRandom) {
+                                   UserRepository userRepository, JwtAuthenticationService jwtAuthenticationService, SecureRandom secureRandom,
+                                   OtpCodeTransmitter otpCodeTransmitter, ProfileService profileService) {
 
         stateHolder = CacheBuilder.newBuilder().maximumSize(MAX_REGISTRATIONS).build();
 
@@ -41,6 +48,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         this.jwtAuthenticationService = jwtAuthenticationService;
         this.otpCodeGenerator = otpCodeGenerator;
         this.secureRandom = secureRandom;
+        this.otpCodeTransmitter = otpCodeTransmitter;
+        this.profileService = profileService;
     }
 
     @Override
@@ -68,7 +77,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         state.setStep(RegistrationState.Step.WAIT_FOR_OTP_CODE);
         state.setOtpCode(code);
 
-        log.debug("sending OTP code {} to phone number {}", code, phoneNumber);
+        otpCodeTransmitter.sendCode(phoneNumber, code);
     }
 
     @Override
@@ -77,6 +86,11 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         if (state.getStep() != RegistrationState.Step.WAIT_FOR_OTP_CODE)
             throw new GenericApiErrorException("Registration steps failure, please try reloading the page");
+
+        if (state.getOtpAttemptCounter() >= MAX_OTP_ATTEMPTS)
+            throw new GenericApiErrorException(403, "Too many one-time code attempts, registration rejected. Please reload the page");
+
+        state.setOtpAttemptCounter(state.getOtpAttemptCounter() + 1);
 
         if (!code.equals(state.getOtpCode()))
             return false;

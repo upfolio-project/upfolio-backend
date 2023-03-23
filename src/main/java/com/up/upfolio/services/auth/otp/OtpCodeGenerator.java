@@ -1,4 +1,4 @@
-package com.up.upfolio.services.auth;
+package com.up.upfolio.services.auth.otp;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
