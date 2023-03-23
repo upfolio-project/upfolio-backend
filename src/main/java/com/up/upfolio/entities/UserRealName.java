@@ -1,5 +1,6 @@
 package com.up.upfolio.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -10,16 +11,18 @@ import java.io.Serializable;
 @Getter
 @AllArgsConstructor
 @Embeddable
-public class UserRealNameModel implements Serializable {
+public class UserRealName implements Serializable {
     private static final int MAX_FIELD_LENGTH = 30;
 
+    @JsonProperty(required = true)
     @NotBlank(message = "First name must be non-empty")
     private String firstName;
 
+    @JsonProperty(required = true)
     @NotBlank(message = "Last name must be non-empty")
     private String lastName;
 
-    public UserRealNameModel() {
+    public UserRealName() {
     }
 
     public boolean checkValid() {

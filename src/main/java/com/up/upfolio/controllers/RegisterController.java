@@ -1,6 +1,6 @@
 package com.up.upfolio.controllers;
 
-import com.up.upfolio.entities.UserRealNameModel;
+import com.up.upfolio.entities.UserRealName;
 import com.up.upfolio.exceptions.GenericApiErrorException;
 import com.up.upfolio.model.api.request.auth.ConfirmPhoneOtpRequest;
 import com.up.upfolio.model.api.request.auth.FinishRegistrationRequest;
@@ -46,6 +46,6 @@ public class RegisterController extends BaseController {
     @PostMapping("/finish")
     public JwtSuccessAuthResponse finish(@RequestBody @Valid FinishRegistrationRequest request) {
         return registrationService.finish(request.getRegisterToken(),
-                new UserRealNameModel(request.getFirstName(), request.getLastName()), request.getPassword());
+                new UserRealName(request.getFirstName(), request.getLastName()), request.getPassword());
     }
 }

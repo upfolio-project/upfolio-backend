@@ -1,17 +1,21 @@
 package com.up.upfolio.model.user;
 
-import com.up.upfolio.entities.UserRealNameModel;
+import com.up.upfolio.entities.UserRealName;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.OffsetDateTime;
 import java.util.List;
 
+
+/*
+    ProfileModel contains the fields which are publicly returned through the API
+*/
 @Getter
 @Setter
 public class ProfileModel {
     private String username;
-    private UserRealNameModel realName;
+    private UserRealName realName;
     private String dateOfBirth;
     private String profilePhotoUrl;
     private ProfileType type;

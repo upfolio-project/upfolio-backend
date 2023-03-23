@@ -2,7 +2,7 @@ package com.up.upfolio.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -23,12 +23,12 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID uuid;
 
-    @NotEmpty(message = "Phone number must be set")
+    @NotBlank(message = "Phone number must be set")
     @Size(min = 6, max = 11, message = "Phone number must be between 2 and 32 characters long")
     private String phoneNumber;
 
     @NotNull(message = "Username must not be blank")
-    private UserRealNameModel name;
+    private UserRealName name;
 
     @JsonIgnore
     private String passwordHash;
