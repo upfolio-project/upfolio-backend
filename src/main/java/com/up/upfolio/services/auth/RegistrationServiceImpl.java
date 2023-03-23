@@ -102,7 +102,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public JwtSuccessAuthResponse finish(String registerToken, UserRealNameModel realName, String password) {
+    public JwtSuccessAuthResponse finish(String registerToken, UserRealName realName, String password) {
         RegistrationState state = getState(registerToken);
 
         if (state.getStep() != RegistrationState.Step.WAIT_FOR_FINISH)
@@ -116,6 +116,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         user.setPhoneNumber(state.getPhoneNumber());
         user.setPasswordHash(passwordEncoder.encode(password));
         user = userRepository.save(user);
+
+        profileService.createBlankProfile(user.getUuid(), realName);
 
         String token = jwtAuthenticationService.generate(user.getUuid());
 
