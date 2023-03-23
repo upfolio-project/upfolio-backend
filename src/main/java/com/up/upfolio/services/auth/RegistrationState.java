@@ -14,6 +14,7 @@ public class RegistrationState {
 
     private Step step;
     private String otpCode;
+    private int otpAttemptCounter;
     private String phoneNumber;
 
     public RegistrationState() {
