@@ -1,47 +1,34 @@
 package com.up.upfolio.controllers;
 
-import com.up.upfolio.entities.UserRealNameModel;
 import com.up.upfolio.model.api.response.profile.GetMeResponse;
 import com.up.upfolio.model.api.response.profile.GetProfileResponse;
-import com.up.upfolio.model.user.ProfileModel;
-import com.up.upfolio.model.user.ProfileStatus;
-import com.up.upfolio.model.user.ProfileType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.up.upfolio.model.user.EditProfileModel;
+import com.up.upfolio.services.profile.ProfileService;
+import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
-import java.time.Duration;
-import java.time.OffsetDateTime;
-import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/v1/profile")
+@RequiredArgsConstructor
 public class ProfileController extends BaseController {
-    @GetMapping("/getMe")
-    public GetMeResponse getMe() {
-        // TODO implement the profile CRUD
+    private final ProfileService profileService;
 
-        return new GetMeResponse("mock", "https://upfolio.ru/mock");
+    @GetMapping("/getMe")
+    public GetMeResponse getMe(@Parameter(hidden = true) UUID userUuid) {
+        return profileService.getMe(userUuid);
     }
 
     @GetMapping("/{username}")
-    public GetProfileResponse getProfile(@PathVariable String username) {
-        // TODO implement the profile CRUD
+    public GetProfileResponse getProfile(@Parameter(hidden = true) UUID userUuid, @PathVariable String username) {
+        return new GetProfileResponse(profileService.getProfile(userUuid, username));
+    }
 
-        ProfileModel model = new ProfileModel();
-
-        model.setStatus(ProfileStatus.LOOKING_FOR_JOB);
-        model.setType(ProfileType.PUBLIC);
-        model.setBio("Test bio");
-        model.setTags(List.of("angular", "react", "nextjs", "frontend"));
-        model.setProfilePhotoUrl("https://upfolio.ru/assets/no-img.png");
-        model.setVerified(true);
-        model.setUsername("mock");
-        model.setRealName(new UserRealNameModel("Ivan", "Mockov"));
-        model.setDateOfBirth("2000-12-24");
-        model.setRegistered(OffsetDateTime.now().minus(Duration.ofDays(10)));
-
-        return new GetProfileResponse(model);
+    @PostMapping("/edit")
+    public GetProfileResponse editProfile(@Parameter(hidden = true) UUID userUuid, @RequestBody @Valid EditProfileModel editProfileModel) {
+        return new GetProfileResponse(profileService.editProfile(userUuid, editProfileModel));
     }
 }
