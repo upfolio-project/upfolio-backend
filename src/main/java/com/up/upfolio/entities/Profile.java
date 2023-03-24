@@ -33,6 +33,8 @@ public class Profile {
 
     private OffsetDateTime registered;
 
+    private String location;
+
     private ProfileStatus status;
 
     private String bio;

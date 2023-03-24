@@ -40,5 +40,10 @@ public class EditProfileModel {
     private List<String> tags;
 
     @NotEmpty
+    @JsonProperty(required = true)
+    @Size(max = 32)
+    private String location;
+
+    @NotEmpty
     private String dateOfBirth;
 }

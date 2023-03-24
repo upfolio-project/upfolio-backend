@@ -23,5 +23,6 @@ public class ProfileModel {
     private ProfileStatus status;
     private String bio;
     private List<String> tags;
+    private String location;
     private Boolean verified;
 }

@@ -61,6 +61,7 @@ public class ProfileServiceImpl implements ProfileService {
 
         profile.setDateOfBirth(editProfile.getDateOfBirth());
         profile.setTags(editProfile.getTags());
+        profile.setLocation(editProfile.getLocation());
         profile.setStatus(editProfile.getStatus());
         profile.setBio(editProfile.getBio());
         profile.setType(editProfile.getType());
