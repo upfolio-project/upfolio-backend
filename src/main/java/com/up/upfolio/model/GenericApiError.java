@@ -1,4 +1,4 @@
-package models.api;
+package com.up.upfolio.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.servlet.http.HttpServletResponse;
