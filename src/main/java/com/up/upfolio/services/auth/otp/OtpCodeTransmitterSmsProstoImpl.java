@@ -45,16 +45,32 @@ public class OtpCodeTransmitterSmsProstoImpl implements OtpCodeTransmitter {
 
     @Override
     public void sendCode(String phoneNumber, String code) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        makeRequest(createParams(phoneNumber, interpolate(code)));
+    }
 
+    @Override
+    public void makeCall(String phoneNumber, String code) {
+        MultiValueMap<String, String> params = createParams(phoneNumber, interpolate(code));
+        params.add("route", "pc");
+
+        makeRequest(params);
+    }
+
+    private MultiValueMap<String, String> createParams(String phoneNumber, String text) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("key", apiKey);
         params.add("method", "push_msg");
         params.add("format", "json");
         params.add("phone", phoneNumber);
         params.add("sender_name", sender);
-        params.add("text", interpolate(code));
+        params.add("text", text);
+
+        return params;
+    }
+
+    private void makeRequest(MultiValueMap<String, String> params) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(params, headers);
 
