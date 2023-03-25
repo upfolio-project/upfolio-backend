@@ -7,6 +7,7 @@ import com.up.upfolio.model.api.request.auth.FinishRegistrationRequest;
 import com.up.upfolio.model.api.request.auth.RegisterByPhoneNumberRequest;
 import com.up.upfolio.model.api.response.auth.JwtSuccessAuthResponse;
 import com.up.upfolio.model.api.response.SuccessResponse;
+import com.up.upfolio.model.api.response.auth.OtpSentResponse;
 import com.up.upfolio.model.api.response.auth.RegisterTokenResponse;
 import com.up.upfolio.services.auth.RegistrationService;
 import jakarta.validation.Valid;
@@ -26,10 +27,8 @@ public class RegisterController extends BaseController {
     }
 
     @PostMapping("/phoneNumber")
-    public SuccessResponse commenceByPhoneNumber(@RequestBody @Valid RegisterByPhoneNumberRequest request) {
-        registrationService.sendOtpCode(request.getRegisterToken(), request.getPhoneNumber());
-
-        return new SuccessResponse();
+    public OtpSentResponse commenceByPhoneNumber(@RequestBody @Valid RegisterByPhoneNumberRequest request) {
+        return registrationService.sendOtpCode(request.getRegisterToken(), request.getPhoneNumber());
     }
 
     @PostMapping("/confirm")

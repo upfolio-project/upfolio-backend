@@ -6,6 +6,7 @@ import com.up.upfolio.entities.User;
 import com.up.upfolio.exceptions.GenericApiErrorException;
 import com.up.upfolio.model.api.response.auth.JwtSuccessAuthResponse;
 import com.up.upfolio.entities.UserRealName;
+import com.up.upfolio.model.api.response.auth.OtpSentResponse;
 import com.up.upfolio.repositories.UserRepository;
 import com.up.upfolio.services.auth.otp.OtpCodeGenerator;
 import com.up.upfolio.services.auth.otp.OtpCodeTransmitter;
@@ -64,20 +65,24 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public void sendOtpCode(String registerToken, String phoneNumber) {
+    public OtpSentResponse sendOtpCode(String registerToken, String phoneNumber) {
         RegistrationState state = getState(registerToken);
 
         if (state.getStep() != RegistrationState.Step.WAIT_FOR_PHONE_NUMBER)
             throw new GenericApiErrorException("Registration steps failure, please try reloading the page");
 
-        // generate otp and send SMS
         String code = otpCodeGenerator.generateCode();
 
         state.setPhoneNumber(phoneNumberNormalizer.normalize(phoneNumber));
         state.setStep(RegistrationState.Step.WAIT_FOR_OTP_CODE);
         state.setOtpCode(code);
 
-        otpCodeTransmitter.sendCode(phoneNumber, code);
+        if (state.getConfirmationMethod() == RegistrationState.PhoneNumberConfirmationMethod.SMS)
+            otpCodeTransmitter.sendCode(phoneNumber, code);
+        else
+            otpCodeTransmitter.makeCall(phoneNumber, code);
+
+        return new OtpSentResponse(state.getConfirmationMethod(), phoneNumber);
     }
 
     @Override

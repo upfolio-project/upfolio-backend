@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "otp.smsprosto.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Description for otp.smsprosto.enabled."
+  }
+] }
