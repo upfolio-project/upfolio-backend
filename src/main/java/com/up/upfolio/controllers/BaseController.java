@@ -1,5 +1,6 @@
 package com.up.upfolio.controllers;
 
+import com.up.upfolio.exceptions.ErrorBulk;
 import com.up.upfolio.exceptions.GenericApiErrorException;
 import com.up.upfolio.exceptions.UnauthorizedException;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
@@ -7,7 +8,7 @@ import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.servers.Server;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import com.up.upfolio.model.GenericApiError;
+import com.up.upfolio.model.errors.GenericApiError;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -23,16 +24,16 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class BaseController {
         @ExceptionHandler(GenericApiErrorException.class)
         public GenericApiError handleGenericException(HttpServletResponse response, GenericApiErrorException e) {
-                response.setStatus(e.getStatus());
+                response.setStatus(e.getErrorBulk().getStatus());
 
-                return new GenericApiError(e.getStatus(), e.getText());
+                return new GenericApiError(e.getErrorBulk());
         }
 
         @ExceptionHandler(UnauthorizedException.class)
         public GenericApiError handleUnauthorizedException(HttpServletResponse response) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-                return new GenericApiError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+                return new GenericApiError(ErrorBulk.UNAUTHORIZED);
         }
 
         @ExceptionHandler({RuntimeException.class})
@@ -40,16 +41,13 @@ public class BaseController {
                 log.error("BaseController caught runtime exception", e);
 
                 response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                return new GenericApiError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An internal server error was encountered. Please try your request later");
+                return new GenericApiError(ErrorBulk.INTERNAL_SERVER_ERROR);
         }
 
         @ExceptionHandler({HttpMessageNotReadableException.class})
         public GenericApiError handleNotReadable(HttpServletResponse response, HttpMessageNotReadableException e) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
-                GenericApiError error = new GenericApiError(HttpServletResponse.SC_BAD_REQUEST, "Invalid request. Please try reloading the tab");
-                error.setErrorMessage(e.getMessage());
-
-                return error;
+                return new GenericApiError(ErrorBulk.BAD_REQUEST);
         }
 }

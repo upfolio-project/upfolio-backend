@@ -1,12 +1,13 @@
 package com.up.upfolio.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.up.upfolio.exceptions.ErrorBulk;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import com.up.upfolio.model.GenericApiError;
+import com.up.upfolio.model.errors.GenericApiError;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -25,9 +26,6 @@ public class JwtUnauthorizedController implements AuthenticationEntryPoint {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
         log.debug("Unauthorized");
-        objectMapper.writeValue(response.getOutputStream(),
-                new GenericApiError(HttpServletResponse.SC_UNAUTHORIZED,
-                        "You are unauthorized. Please proceed to the login page")
-        );
+        objectMapper.writeValue(response.getOutputStream(), new GenericApiError(ErrorBulk.UNAUTHORIZED));
     }
 }

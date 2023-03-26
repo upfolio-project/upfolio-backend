@@ -1,6 +1,7 @@
-package com.up.upfolio.model;
+package com.up.upfolio.model.errors;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.up.upfolio.exceptions.ErrorBulk;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,18 +14,14 @@ public class GenericApiError {
     private final int status;
     private final String text;
     private final OffsetDateTime timestamp;
+    private final ErrorBulk error;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String errorMessage = null;
-
-    public GenericApiError(String badRequestMessage) {
-        this(HttpServletResponse.SC_BAD_REQUEST, badRequestMessage);
-    }
-
-    public GenericApiError(int status, String text) {
-        this.status = status;
-        this.text = text;
+    public GenericApiError(ErrorBulk errorBulk) {
         this.timestamp = OffsetDateTime.now();
+
+        this.error = errorBulk;
+        this.text = errorBulk.getDescription();
+        this.status = errorBulk.getStatus();
     }
 }
 

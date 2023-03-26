@@ -1,6 +1,7 @@
 package com.up.upfolio.controllers;
 
 import com.up.upfolio.entities.UserRealName;
+import com.up.upfolio.exceptions.ErrorBulk;
 import com.up.upfolio.exceptions.GenericApiErrorException;
 import com.up.upfolio.model.api.request.auth.ConfirmPhoneOtpRequest;
 import com.up.upfolio.model.api.request.auth.FinishRegistrationRequest;
@@ -35,9 +36,7 @@ public class RegisterController extends BaseController {
     public SuccessResponse confirmPhoneOTP(@RequestBody @Valid ConfirmPhoneOtpRequest request) {
         boolean ok = registrationService.verifyOtpCode(request.getRegisterToken(), request.getCode());
 
-        if (!ok) {
-            throw new GenericApiErrorException(403, "Invalid OTP code");
-        }
+        if (!ok) throw new GenericApiErrorException(ErrorBulk.INVALID_OTP_CODE);
 
         return new SuccessResponse();
     }
