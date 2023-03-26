@@ -31,6 +31,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     private final ProfileRepository profileRepository;
     private final ModelMapper modelMapper;
+    private final ProfileMapper profileMapper;
 
     @Override
     public void createBlankProfile(UUID userUuid, UserRealName realName) {
@@ -53,12 +54,12 @@ public class ProfileServiceImpl implements ProfileService {
     public ProfileModel getProfile(UUID userUuid, String username) {
         Profile profile = profileRepository.findByUsername(username).orElseThrow(() -> new GenericApiErrorException(ErrorDescriptor.PROFILE_NOT_FOUND));
 
-        return modelMapper.map(profile, ProfileModel.class);
+        return profileMapper.map(userUuid, profile);
     }
 
     @Override
     public ProfileModel editProfile(UUID userUuid, EditProfileModel editProfile) {
-        Profile profile = profileRepository.findById(userUuid).orElseThrow(() -> new GenericApiErrorException(ErrorBulk.ACCOUNT_IS_DEACTIVATED));
+        Profile profile = profileRepository.findById(userUuid).orElseThrow(() -> new GenericApiErrorException(ErrorDescriptor.ACCOUNT_IS_DEACTIVATED));
 
         profile.setDateOfBirth(editProfile.getDateOfBirth());
         profile.setTags(editProfile.getTags());
