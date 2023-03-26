@@ -57,6 +57,7 @@ public class SecurityConfig {
                         .accessDeniedPage("/error")
                 ).authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/v1/authorize/**").permitAll()
+                        .requestMatchers("/v1/profile/**").permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/v1/register/**").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
