@@ -3,7 +3,7 @@ package com.up.upfolio.services.auth;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.up.upfolio.entities.User;
-import com.up.upfolio.exceptions.ErrorBulk;
+import com.up.upfolio.exceptions.ErrorDescriptor;
 import com.up.upfolio.exceptions.GenericApiErrorException;
 import com.up.upfolio.model.api.response.auth.JwtSuccessAuthResponse;
 import com.up.upfolio.entities.UserRealName;
@@ -40,7 +40,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     public RegistrationServiceImpl(OtpCodeGenerator otpCodeGenerator, PasswordEncoder passwordEncoder, PhoneNumberNormalizer phoneNumberNormalizer,
                                    UserRepository userRepository, JwtAuthenticationService jwtAuthenticationService, SecureRandom secureRandom,
-                                   OtpCodeTransmitter otpCodeTransmitter, ProfileService profileService) {
+                                   OtpCodeTransmitter otpCodeTransmitter, ProfileService profileService, JwtRefreshTokenService jwtRefreshTokenService) {
 
         stateHolder = CacheBuilder.newBuilder().maximumSize(MAX_REGISTRATIONS).build();
 
@@ -70,7 +70,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         RegistrationState state = getState(registerToken);
 
         if (state.getStep() != RegistrationState.Step.WAIT_FOR_PHONE_NUMBER)
-            throw new GenericApiErrorException(ErrorBulk.REGISTRATION_STEPS_FAULT);
+            throw new GenericApiErrorException(ErrorDescriptor.REGISTRATION_STEPS_FAULT);
 
         String code = otpCodeGenerator.generateCode();
 
@@ -91,10 +91,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         RegistrationState state = getState(registerToken);
 
         if (state.getStep() != RegistrationState.Step.WAIT_FOR_OTP_CODE)
-            throw new GenericApiErrorException(ErrorBulk.REGISTRATION_STEPS_FAULT);
+            throw new GenericApiErrorException(ErrorDescriptor.REGISTRATION_STEPS_FAULT);
 
         if (state.getOtpAttemptCounter() >= MAX_OTP_ATTEMPTS)
-            throw new GenericApiErrorException(ErrorBulk.OTP_ATTEMPTS_EXCEEDED);
+            throw new GenericApiErrorException(ErrorDescriptor.OTP_ATTEMPTS_EXCEEDED);
 
         state.setOtpAttemptCounter(state.getOtpAttemptCounter() + 1);
 
@@ -112,10 +112,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         RegistrationState state = getState(registerToken);
 
         if (state.getStep() != RegistrationState.Step.WAIT_FOR_FINISH)
-            throw new GenericApiErrorException(ErrorBulk.REGISTRATION_STEPS_FAULT);
+            throw new GenericApiErrorException(ErrorDescriptor.REGISTRATION_STEPS_FAULT);
 
         if (!realName.checkValid())
-            throw new GenericApiErrorException(ErrorBulk.BAD_USER_NAME);
+            throw new GenericApiErrorException(ErrorDescriptor.BAD_USER_NAME);
 
         User user = new User();
         user.setName(realName);
@@ -134,7 +134,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         RegistrationState state = stateHolder.getIfPresent(registerToken);
 
         if (state == null)
-            throw new GenericApiErrorException(ErrorBulk.REGISTRATION_TOKEN_IS_NOT_PROVIDED);
+            throw new GenericApiErrorException(ErrorDescriptor.REGISTRATION_TOKEN_IS_NOT_PROVIDED);
 
         return state;
     }

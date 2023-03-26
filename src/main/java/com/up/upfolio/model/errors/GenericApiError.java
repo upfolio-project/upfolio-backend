@@ -1,8 +1,7 @@
 package com.up.upfolio.model.errors;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.up.upfolio.exceptions.ErrorBulk;
-import jakarta.servlet.http.HttpServletResponse;
+import com.up.upfolio.exceptions.ErrorDescriptor;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,18 +9,19 @@ import java.time.OffsetDateTime;
 
 @Getter
 @Setter
+@Schema(name = "ApiError", requiredMode = Schema.RequiredMode.REQUIRED)
 public class GenericApiError {
     private final int status;
     private final String text;
     private final OffsetDateTime timestamp;
-    private final ErrorBulk error;
+    private final ErrorDescriptor error;
 
-    public GenericApiError(ErrorBulk errorBulk) {
+    public GenericApiError(ErrorDescriptor errorDescriptor) {
         this.timestamp = OffsetDateTime.now();
 
-        this.error = errorBulk;
-        this.text = errorBulk.getDescription();
-        this.status = errorBulk.getStatus();
+        this.error = errorDescriptor;
+        this.text = errorDescriptor.getDescription();
+        this.status = errorDescriptor.getStatus();
     }
 }
 

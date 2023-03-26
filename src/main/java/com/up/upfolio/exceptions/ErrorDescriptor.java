@@ -2,7 +2,7 @@ package com.up.upfolio.exceptions;
 
 import jakarta.servlet.http.HttpServletResponse;
 
-public enum ErrorBulk {
+public enum ErrorDescriptor {
     INVALID_OTP_CODE(HttpServletResponse.SC_FORBIDDEN, "Invalid OTP code"),
     ACCOUNT_NOT_FOUND("The account with this phone number is not found"),
     INCORRECT_PASSWORD(HttpServletResponse.SC_FORBIDDEN, "Password is incorrect"),
@@ -15,19 +15,20 @@ public enum ErrorBulk {
     ACCOUNT_IS_DEACTIVATED("Your account is deactivated. Please contact the support team"),
     UNAUTHORIZED(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"),
     INTERNAL_SERVER_ERROR(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal server error"),
-    BAD_REQUEST("Invalid request. Please try reloading the tab");
+    BAD_REQUEST("Invalid request. Please try reloading the tab"),
+    SESSION_EXPIRED(HttpServletResponse.SC_UNAUTHORIZED, "Session is expired. Please sign in again");
 
     private final String description;
     private final int status;
 
     private static final int DEFAULT_CODE = HttpServletResponse.SC_BAD_REQUEST;
 
-    ErrorBulk(int status, String description) {
+    ErrorDescriptor(int status, String description) {
         this.description = description;
         this.status = status;
     }
 
-    ErrorBulk(String description) {
+    ErrorDescriptor(String description) {
         this.description = description;
         this.status = DEFAULT_CODE;
     }

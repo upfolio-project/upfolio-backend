@@ -1,7 +1,7 @@
 package com.up.upfolio.controllers;
 
 import com.up.upfolio.entities.User;
-import com.up.upfolio.exceptions.ErrorBulk;
+import com.up.upfolio.exceptions.ErrorDescriptor;
 import com.up.upfolio.exceptions.GenericApiErrorException;
 import com.up.upfolio.model.api.request.auth.AuthorizeByPasswordRequest;
 import com.up.upfolio.model.api.response.auth.JwtSuccessAuthResponse;
@@ -28,7 +28,7 @@ public class AuthorizeController extends BaseController {
         User user = userRepository.findByPhoneNumber(request.getPhoneNumber()).orElseThrow(() -> new GenericApiErrorException(ErrorBulk.ACCOUNT_NOT_FOUND));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash()))
-            throw new GenericApiErrorException(ErrorBulk.INCORRECT_PASSWORD);
+            throw new GenericApiErrorException(ErrorDescriptor.INCORRECT_PASSWORD);
 
         String jwtToken = jwtAuthenticationService.generate(user.getUuid());
 

@@ -2,7 +2,7 @@ package com.up.upfolio.services.profile;
 
 import com.up.upfolio.entities.Profile;
 import com.up.upfolio.entities.UserRealName;
-import com.up.upfolio.exceptions.ErrorBulk;
+import com.up.upfolio.exceptions.ErrorDescriptor;
 import com.up.upfolio.exceptions.GenericApiErrorException;
 import com.up.upfolio.model.api.response.profile.GetMeResponse;
 import com.up.upfolio.model.user.EditProfileModel;
@@ -51,7 +51,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public ProfileModel getProfile(UUID userUuid, String username) {
-        Profile profile = profileRepository.findByUsername(username).orElseThrow(() -> new GenericApiErrorException(ErrorBulk.PROFILE_NOT_FOUND));
+        Profile profile = profileRepository.findByUsername(username).orElseThrow(() -> new GenericApiErrorException(ErrorDescriptor.PROFILE_NOT_FOUND));
 
         return modelMapper.map(profile, ProfileModel.class);
     }
@@ -76,7 +76,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public GetMeResponse getMe(UUID userUuid) {
-        Profile profile = profileRepository.findById(userUuid).orElseThrow(() -> new GenericApiErrorException(ErrorBulk.ACCOUNT_IS_DEACTIVATED));
+        Profile profile = profileRepository.findById(userUuid).orElseThrow(() -> new GenericApiErrorException(ErrorDescriptor.ACCOUNT_IS_DEACTIVATED));
 
         return new GetMeResponse(profile.getUsername(), baseHost+"/"+profile.getUsername());
     }

@@ -1,7 +1,7 @@
 package com.up.upfolio.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.up.upfolio.exceptions.ErrorBulk;
+import com.up.upfolio.exceptions.ErrorDescriptor;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,6 +26,6 @@ public class JwtUnauthorizedController implements AuthenticationEntryPoint {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
         log.debug("Unauthorized");
-        objectMapper.writeValue(response.getOutputStream(), new GenericApiError(ErrorBulk.UNAUTHORIZED));
+        objectMapper.writeValue(response.getOutputStream(), new GenericApiError(ErrorDescriptor.UNAUTHORIZED));
     }
 }

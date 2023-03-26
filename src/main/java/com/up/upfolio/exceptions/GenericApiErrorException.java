@@ -5,9 +5,9 @@ import lombok.Getter;
 
 public class GenericApiErrorException extends RuntimeException {
     @Getter
-    private final ErrorBulk errorBulk;
+    private final ErrorDescriptor errorDescriptor;
 
-    public GenericApiErrorException(ErrorBulk errorBulk) {
-        this.errorBulk = errorBulk;
+    public GenericApiErrorException(ErrorDescriptor errorDescriptor) {
+        this.errorDescriptor = errorDescriptor;
     }
 }
