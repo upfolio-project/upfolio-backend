@@ -30,6 +30,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final PhoneNumberNormalizer phoneNumberNormalizer;
     private final UserRepository userRepository;
     private final JwtAuthenticationService jwtAuthenticationService;
+    private final JwtRefreshTokenService jwtRefreshTokenService;
     private final Base64.Encoder base64Encoder = Base64.getUrlEncoder();
     private final SecureRandom secureRandom;
     private final OtpCodeTransmitter otpCodeTransmitter;
@@ -52,6 +53,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         this.secureRandom = secureRandom;
         this.otpCodeTransmitter = otpCodeTransmitter;
         this.profileService = profileService;
+        this.jwtRefreshTokenService = jwtRefreshTokenService;
     }
 
     @Override
@@ -125,9 +127,10 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         profileService.createBlankProfile(user.getUuid(), realName);
 
-        String token = jwtAuthenticationService.generate(user.getUuid());
+        String jwtToken = jwtAuthenticationService.generate(user.getUuid());
+        String jwtRefreshToken = jwtRefreshTokenService.createRefreshToken(user);
 
-        return new JwtSuccessAuthResponse(token, "");
+        return new JwtSuccessAuthResponse(jwtToken, jwtRefreshToken);
     }
 
     private RegistrationState getState(String registerToken) {
