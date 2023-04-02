@@ -2,13 +2,15 @@ package com.up.upfolio.model.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.up.upfolio.entities.UserRealName;
+import com.up.upfolio.model.validators.DateOfBirthConstraint;
+import com.up.upfolio.model.validators.NullOrNotBlank;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -39,11 +41,10 @@ public class EditProfileModel {
     @JsonProperty(required = true)
     private List<String> tags;
 
-    @NotEmpty
-    @JsonProperty(required = true)
+    @NullOrNotBlank
     @Size(max = 32)
     private String location;
 
-    @NotEmpty
-    private String dateOfBirth;
+    @DateOfBirthConstraint
+    private LocalDate dateOfBirth;
 }

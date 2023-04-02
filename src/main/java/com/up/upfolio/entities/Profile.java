@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -25,7 +26,7 @@ public class Profile {
 
     private UserRealName realName;
 
-    private String dateOfBirth;
+    private LocalDate dateOfBirth;
 
     private String profilePhotoUrl;
 
