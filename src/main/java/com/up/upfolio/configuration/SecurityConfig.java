@@ -94,7 +94,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(List.of("http://upfolio.ru", "https://upfolio.ru", "http://localhost:*"));
+        config.setAllowedOriginPatterns(List.of("http://upfolio.ru", "https://upfolio.ru", "http://localhost:*", "http://*.upfolio.ru", "https://*.upfolio.ru"));
 
         config.setAllowedMethods(List.of("GET", "POST", "OPTIONS", "DELETE", "PUT", "PATCH"));
         config.setAllowCredentials(true);
