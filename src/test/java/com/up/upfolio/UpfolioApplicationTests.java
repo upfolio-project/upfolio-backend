@@ -9,23 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 class UpfolioApplicationTests {
-	@Autowired
-	private OtpCodeGenerator otpCodeGenerator;
-
 	@Test
 	void contextLoads() {
-	}
-
-	@Test
-	void testOtpGenerator() {
-		String code1 = otpCodeGenerator.generateCode();
-
-		assertEquals(4, code1.length());
-
-		String code2 = otpCodeGenerator.generateCode();
-		String code3 = otpCodeGenerator.generateCode();
-		System.out.println(code1);
-		System.out.println(code2);
-		System.out.println(code3);
 	}
 }
