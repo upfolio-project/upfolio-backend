@@ -2,7 +2,7 @@ package com.up.upfolio.services.auth;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.up.upfolio.entities.User;
+import com.up.upfolio.entities.UserEntity;
 import com.up.upfolio.exceptions.ErrorDescriptor;
 import com.up.upfolio.exceptions.GenericApiErrorException;
 import com.up.upfolio.model.api.response.auth.JwtSuccessAuthResponse;
@@ -119,7 +119,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (!realName.checkValid())
             throw new GenericApiErrorException(ErrorDescriptor.BAD_USER_NAME);
 
-        User user = new User();
+        UserEntity user = new UserEntity();
         user.setName(realName);
         user.setPhoneNumber(state.getPhoneNumber());
         user.setPasswordHash(passwordEncoder.encode(password));
@@ -131,6 +131,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         String jwtRefreshToken = jwtRefreshTokenService.createRefreshToken(user);
 
         return new JwtSuccessAuthResponse(jwtToken, jwtRefreshToken);
+    }
+
+    @Override
+    public int getMaxOtpAttempts() {
+        return MAX_OTP_ATTEMPTS;
     }
 
     private RegistrationState getState(String registerToken) {

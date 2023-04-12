@@ -1,6 +1,6 @@
 package com.up.upfolio.services.profile;
 
-import com.up.upfolio.entities.Profile;
+import com.up.upfolio.entities.ProfileEntity;
 import com.up.upfolio.entities.UserRealName;
 import com.up.upfolio.exceptions.ErrorDescriptor;
 import com.up.upfolio.exceptions.GenericApiErrorException;
@@ -35,7 +35,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public void createBlankProfile(UUID userUuid, UserRealName realName) {
-        Profile profile = new Profile();
+        ProfileEntity profile = new ProfileEntity();
 
         profile.setProfilePhotoUrl(baseHost+"/assets/no-img.png");
         profile.setBio("");
@@ -52,14 +52,14 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public ProfileModel getProfile(UUID userUuid, String username) {
-        Profile profile = profileRepository.findByUsername(username).orElseThrow(() -> new GenericApiErrorException(ErrorDescriptor.PROFILE_NOT_FOUND));
+        ProfileEntity profile = profileRepository.findByUsername(username).orElseThrow(() -> new GenericApiErrorException(ErrorDescriptor.PROFILE_NOT_FOUND));
 
         return profileMapper.map(userUuid, profile);
     }
 
     @Override
     public ProfileModel editProfile(UUID userUuid, EditProfileModel editProfile) {
-        Profile profile = profileRepository.findById(userUuid).orElseThrow(() -> new GenericApiErrorException(ErrorDescriptor.ACCOUNT_IS_DEACTIVATED));
+        ProfileEntity profile = profileRepository.findById(userUuid).orElseThrow(() -> new GenericApiErrorException(ErrorDescriptor.ACCOUNT_IS_DEACTIVATED));
 
         profile.setDateOfBirth(editProfile.getDateOfBirth());
         profile.setTags(editProfile.getTags());
@@ -77,7 +77,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public GetMeResponse getMe(UUID userUuid) {
-        Profile profile = profileRepository.findById(userUuid).orElseThrow(() -> new GenericApiErrorException(ErrorDescriptor.ACCOUNT_IS_DEACTIVATED));
+        ProfileEntity profile = profileRepository.findById(userUuid).orElseThrow(() -> new GenericApiErrorException(ErrorDescriptor.ACCOUNT_IS_DEACTIVATED));
 
         return new GetMeResponse(profile.getUsername(), baseHost+"/"+profile.getUsername());
     }

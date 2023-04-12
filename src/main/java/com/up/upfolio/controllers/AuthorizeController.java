@@ -1,6 +1,6 @@
 package com.up.upfolio.controllers;
 
-import com.up.upfolio.entities.User;
+import com.up.upfolio.entities.UserEntity;
 import com.up.upfolio.exceptions.ErrorDescriptor;
 import com.up.upfolio.exceptions.GenericApiErrorException;
 import com.up.upfolio.model.api.request.auth.AuthorizeByPasswordRequest;
@@ -29,7 +29,7 @@ public class AuthorizeController extends BaseController {
 
     @PostMapping("/byPassword")
     public JwtSuccessAuthResponse byPassword(@RequestBody @Valid AuthorizeByPasswordRequest request) {
-        User user = userRepository.findByPhoneNumber(request.getPhoneNumber()).orElseThrow(() -> new GenericApiErrorException(ErrorDescriptor.ACCOUNT_NOT_FOUND));
+        UserEntity user = userRepository.findByPhoneNumber(request.getPhoneNumber()).orElseThrow(() -> new GenericApiErrorException(ErrorDescriptor.ACCOUNT_NOT_FOUND));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash()))
             throw new GenericApiErrorException(ErrorDescriptor.INCORRECT_PASSWORD);

@@ -18,9 +18,9 @@ import java.util.UUID;
 @Table(name = "users")
 @Getter
 @Setter
-public class User implements UserDetails {
+public class UserEntity implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private UUID uuid;
 
     @NotBlank(message = "Phone number must be set")

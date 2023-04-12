@@ -10,4 +10,6 @@ public interface RegistrationService {
     OtpSentResponse sendOtpCode(String registerToken, String phoneNumber);
     boolean verifyOtpCode(String registerToken, String code);
     JwtSuccessAuthResponse finish(String registerToken, UserRealName realName, String password);
+
+    int getMaxOtpAttempts();
 }

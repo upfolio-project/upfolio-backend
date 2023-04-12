@@ -16,7 +16,7 @@ import java.util.UUID;
 @Setter
 @Entity
 @Table(name = "profiles")
-public class Profile {
+public class ProfileEntity {
     @Id
     private UUID userUuid;
 
@@ -44,6 +44,9 @@ public class Profile {
     @CollectionTable(name = "profile_tags", joinColumns = @JoinColumn(name = "userUuid"))
     @Column(name = "tag")
     private List<String> tags;
+
+    @OneToMany
+    private List<ProjectEntity> projects;
 
     private Boolean verified;
 }

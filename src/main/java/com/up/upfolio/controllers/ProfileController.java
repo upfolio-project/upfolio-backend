@@ -22,7 +22,7 @@ public class ProfileController extends BaseController {
         return profileService.getMe(userUuid);
     }
 
-    @GetMapping("/{username}")
+    @GetMapping("/user/{username}")
     public GetProfileResponse getProfile(@Parameter(hidden = true) UUID userUuid, @PathVariable String username) {
         return new GetProfileResponse(profileService.getProfile(userUuid, username));
     }

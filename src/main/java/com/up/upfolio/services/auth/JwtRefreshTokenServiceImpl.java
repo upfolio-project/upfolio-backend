@@ -1,7 +1,7 @@
 package com.up.upfolio.services.auth;
 
-import com.up.upfolio.entities.JwtRefreshToken;
-import com.up.upfolio.entities.User;
+import com.up.upfolio.entities.JwtRefreshTokenEntity;
+import com.up.upfolio.entities.UserEntity;
 import com.up.upfolio.exceptions.ErrorDescriptor;
 import com.up.upfolio.exceptions.GenericApiErrorException;
 import com.up.upfolio.repositories.JwtRefreshTokenRepository;
@@ -27,8 +27,8 @@ public class JwtRefreshTokenServiceImpl implements JwtRefreshTokenService {
     private final JwtAuthenticationService jwtAuthenticationService;
 
     @Override
-    public String createRefreshToken(User user) {
-        JwtRefreshToken jwtRefreshTokenEntity = new JwtRefreshToken();
+    public String createRefreshToken(UserEntity user) {
+        JwtRefreshTokenEntity jwtRefreshTokenEntity = new JwtRefreshTokenEntity();
 
         jwtRefreshTokenEntity.setCreated(OffsetDateTime.now());
         jwtRefreshTokenEntity.setUser(user);
@@ -44,7 +44,7 @@ public class JwtRefreshTokenServiceImpl implements JwtRefreshTokenService {
     public String refreshJwtToken(String refreshToken) {
         String tokenHash = DigestUtils.sha256Hex(refreshToken);
 
-        JwtRefreshToken jwtRefreshTokenEntity = jwtRefreshTokenRepository.findById(tokenHash).orElseThrow(() -> new GenericApiErrorException(ErrorDescriptor.SESSION_EXPIRED));
+        JwtRefreshTokenEntity jwtRefreshTokenEntity = jwtRefreshTokenRepository.findById(tokenHash).orElseThrow(() -> new GenericApiErrorException(ErrorDescriptor.SESSION_EXPIRED));
 
         if (isExpired(jwtRefreshTokenEntity.getCreated())) {
             jwtRefreshTokenRepository.delete(jwtRefreshTokenEntity);

@@ -1,7 +1,7 @@
 package com.up.upfolio.repositories;
 
-import com.up.upfolio.entities.JwtRefreshToken;
+import com.up.upfolio.entities.JwtRefreshTokenEntity;
 import org.springframework.data.repository.CrudRepository;
 
-public interface JwtRefreshTokenRepository extends CrudRepository<JwtRefreshToken, String> {
+public interface JwtRefreshTokenRepository extends CrudRepository<JwtRefreshTokenEntity, String> {
 }

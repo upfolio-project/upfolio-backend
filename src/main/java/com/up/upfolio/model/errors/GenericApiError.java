@@ -11,10 +11,10 @@ import java.time.OffsetDateTime;
 @Setter
 @Schema(name = "ApiError", requiredMode = Schema.RequiredMode.REQUIRED)
 public class GenericApiError {
-    private final int status;
-    private final String text;
-    private final OffsetDateTime timestamp;
-    private final ErrorDescriptor error;
+    private int status;
+    private String text;
+    private OffsetDateTime timestamp;
+    private ErrorDescriptor error;
 
     public GenericApiError(ErrorDescriptor errorDescriptor) {
         this.timestamp = OffsetDateTime.now();
@@ -22,6 +22,9 @@ public class GenericApiError {
         this.error = errorDescriptor;
         this.text = errorDescriptor.getDescription();
         this.status = errorDescriptor.getStatus();
+    }
+
+    public GenericApiError() {
     }
 }
 

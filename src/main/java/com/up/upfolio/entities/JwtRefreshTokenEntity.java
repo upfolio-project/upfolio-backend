@@ -11,13 +11,13 @@ import java.time.OffsetDateTime;
 @Table(name="refresh_tokens")
 @Getter
 @Setter
-public class JwtRefreshToken {
+public class JwtRefreshTokenEntity {
     @Id
     private String tokenHash;
 
     @ManyToOne
     @JoinColumn(name = "user_uuid")
-    private User user;
+    private UserEntity user;
 
     private OffsetDateTime created;
 
