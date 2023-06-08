@@ -1,4 +1,4 @@
-package com.up.upfolio.model.user;
+package com.up.upfolio.model.profile;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.up.upfolio.entities.UserRealName;
@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.UUID;
 
 
 /*
@@ -18,6 +19,7 @@ import java.util.List;
 @Schema(name = "Profile")
 public class ProfileModel {
     // public info
+    private UUID userUuid;
     private String username;
     private UserRealName realName;
     private OffsetDateTime registered;

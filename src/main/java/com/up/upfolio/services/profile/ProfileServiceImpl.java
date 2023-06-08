@@ -1,14 +1,15 @@
 package com.up.upfolio.services.profile;
 
 import com.up.upfolio.entities.ProfileEntity;
+import com.up.upfolio.entities.ProjectEntity;
 import com.up.upfolio.entities.UserRealName;
 import com.up.upfolio.exceptions.ErrorDescriptor;
 import com.up.upfolio.exceptions.GenericApiErrorException;
 import com.up.upfolio.model.api.response.profile.GetMeResponse;
-import com.up.upfolio.model.user.EditProfileModel;
-import com.up.upfolio.model.user.ProfileModel;
-import com.up.upfolio.model.user.ProfileStatus;
-import com.up.upfolio.model.user.ProfileType;
+import com.up.upfolio.model.profile.InputProfileModel;
+import com.up.upfolio.model.profile.ProfileModel;
+import com.up.upfolio.model.profile.ProfileStatus;
+import com.up.upfolio.model.profile.ProfileType;
 import com.up.upfolio.repositories.ProfileRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +38,6 @@ public class ProfileServiceImpl implements ProfileService {
     public void createBlankProfile(UUID userUuid, UserRealName realName) {
         ProfileEntity profile = new ProfileEntity();
 
-        profile.setProfilePhotoUrl(baseHost+"/assets/no-img.png");
         profile.setBio("");
         profile.setRegistered(OffsetDateTime.now());
         profile.setStatus(ProfileStatus.NOT_LOOKING_FOR_JOB);
@@ -58,7 +58,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public ProfileModel editProfile(UUID userUuid, EditProfileModel editProfile) {
+    public ProfileModel editProfile(UUID userUuid, InputProfileModel editProfile) {
         ProfileEntity profile = profileRepository.findById(userUuid).orElseThrow(() -> new GenericApiErrorException(ErrorDescriptor.ACCOUNT_IS_DEACTIVATED));
 
         profile.setDateOfBirth(editProfile.getDateOfBirth());
@@ -79,7 +79,25 @@ public class ProfileServiceImpl implements ProfileService {
     public GetMeResponse getMe(UUID userUuid) {
         ProfileEntity profile = profileRepository.findById(userUuid).orElseThrow(() -> new GenericApiErrorException(ErrorDescriptor.ACCOUNT_IS_DEACTIVATED));
 
-        return new GetMeResponse(profile.getUsername(), baseHost+"/"+profile.getUsername());
+        return new GetMeResponse(profile.getUsername(), baseHost + "/" + profile.getUsername());
+    }
+
+    @Override
+    public ProfileEntity getByUuid(UUID uuid) {
+        return profileRepository.findById(uuid).orElseThrow(() -> new GenericApiErrorException(ErrorDescriptor.ACCOUNT_NOT_FOUND));
+    }
+
+    @Override
+    public void attachProject(ProfileEntity profile, ProjectEntity project) {
+        profile.getProjects().add(project);
+        profileRepository.save(profile);
+    }
+
+    @Override
+    public void updateProfilePhotoKey(UUID userUuid, String key) {
+        ProfileEntity profile = getByUuid(userUuid);
+        profile.setProfilePhotoKey(key);
+        profileRepository.save(profile);
     }
 
     private String generateRandomUsername() {

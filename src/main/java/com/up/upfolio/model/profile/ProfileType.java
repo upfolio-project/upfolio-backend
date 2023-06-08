@@ -1,4 +1,4 @@
-package com.up.upfolio.model.user;
+package com.up.upfolio.model.profile;
 
 public enum ProfileType {
     PUBLIC,

@@ -2,7 +2,7 @@ package com.up.upfolio.controllers;
 
 import com.up.upfolio.model.api.response.profile.GetMeResponse;
 import com.up.upfolio.model.api.response.profile.GetProfileResponse;
-import com.up.upfolio.model.user.EditProfileModel;
+import com.up.upfolio.model.profile.InputProfileModel;
 import com.up.upfolio.services.profile.ProfileService;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
@@ -28,7 +28,7 @@ public class ProfileController extends BaseController {
     }
 
     @PostMapping("/edit")
-    public GetProfileResponse editProfile(@Parameter(hidden = true) UUID userUuid, @RequestBody @Valid EditProfileModel editProfileModel) {
-        return new GetProfileResponse(profileService.editProfile(userUuid, editProfileModel));
+    public GetProfileResponse editProfile(@Parameter(hidden = true) UUID userUuid, @RequestBody @Valid InputProfileModel inputProfileModel) {
+        return new GetProfileResponse(profileService.editProfile(userUuid, inputProfileModel));
     }
 }

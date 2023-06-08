@@ -1,7 +1,7 @@
 package com.up.upfolio.entities;
 
-import com.up.upfolio.model.user.ProfileStatus;
-import com.up.upfolio.model.user.ProfileType;
+import com.up.upfolio.model.profile.ProfileStatus;
+import com.up.upfolio.model.profile.ProfileType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -28,7 +28,7 @@ public class ProfileEntity {
 
     private LocalDate dateOfBirth;
 
-    private String profilePhotoUrl;
+    private String profilePhotoKey;
 
     private ProfileType type;
 
@@ -49,4 +49,8 @@ public class ProfileEntity {
     private List<ProjectEntity> projects;
 
     private Boolean verified;
+
+    public boolean isPrivate() {
+        return ProfileType.PRIVATE.equals(this.type);
+    }
 }
