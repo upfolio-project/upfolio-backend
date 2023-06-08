@@ -10,4 +10,9 @@ public class GenericApiErrorException extends RuntimeException {
     public GenericApiErrorException(ErrorDescriptor errorDescriptor) {
         this.errorDescriptor = errorDescriptor;
     }
+
+    @Override
+    public String getMessage() {
+        return errorDescriptor.getDescription() + " (" + errorDescriptor.getStatus() + ")";
+    }
 }

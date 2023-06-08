@@ -4,7 +4,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public enum ErrorDescriptor {
     INVALID_OTP_CODE(HttpServletResponse.SC_FORBIDDEN, "Invalid OTP code"),
-    ACCOUNT_NOT_FOUND("The account with this phone number is not found"),
+    ACCOUNT_NOT_FOUND("The account requested is not found"),
     INCORRECT_PASSWORD(HttpServletResponse.SC_FORBIDDEN, "Password is incorrect"),
     BAD_PHONE_NUMBER("Bad phone number"),
     REGISTRATION_STEPS_FAULT("Registration steps fault, please reload the page"),
@@ -16,7 +16,12 @@ public enum ErrorDescriptor {
     UNAUTHORIZED(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"),
     INTERNAL_SERVER_ERROR(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal server error"),
     BAD_REQUEST("Invalid request. Please try reloading the tab"),
-    SESSION_EXPIRED(HttpServletResponse.SC_UNAUTHORIZED, "Session is expired. Please sign in again");
+    SESSION_EXPIRED(HttpServletResponse.SC_UNAUTHORIZED, "Session is expired. Please sign in again"),
+    PROJECT_NOT_FOUND(HttpServletResponse.SC_NOT_FOUND, "The project requested does not exist"),
+    CANNOT_VIEW_THIS_PROFILE(HttpServletResponse.SC_FORBIDDEN, "Sorry, you cannot view this profile"),
+    CANNOT_EDIT_THIS_PROJECT(HttpServletResponse.SC_FORBIDDEN, "Sorry, you cannot edit this project"),
+    PHOTO_DIMENSIONS_ARE_INVALID(HttpServletResponse.SC_BAD_REQUEST, "Sorry, the photo dimensions you provided are incorrect"),
+    PHOTO_IS_INVALID(HttpServletResponse.SC_BAD_REQUEST, "Sorry, this photo format is not supported");
 
     private final String description;
     private final int status;

@@ -4,5 +4,10 @@
       "name": "otp.smsprosto.enabled",
       "type": "java.lang.Boolean",
       "description": "Description for otp.smsprosto.enabled."
-  }
-] }
+  },
+    {
+      "name": "otp.generator.hijack",
+      "type": "java.lang.Boolean",
+      "description": "Description for otp.generator.hijack."
+    }
+  ] }

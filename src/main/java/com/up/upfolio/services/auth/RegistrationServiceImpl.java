@@ -127,6 +127,8 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         profileService.createBlankProfile(user.getUuid(), realName);
 
+        stateHolder.invalidate(registerToken);
+
         String jwtToken = jwtAuthenticationService.generate(user.getUuid());
         String jwtRefreshToken = jwtRefreshTokenService.createRefreshToken(user);
 

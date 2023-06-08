@@ -1,4 +1,4 @@
-package com.up.upfolio.model.user;
+package com.up.upfolio.model.profile;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.up.upfolio.entities.UserRealName;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class EditProfileModel {
+public class InputProfileModel {
     @NotBlank
     @JsonProperty(required = true)
     @Size(min = 3, max = 17, message = "Username must be between 3 and 17 characters long")
