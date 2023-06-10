@@ -16,7 +16,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/v1")
 @RequiredArgsConstructor
-public class UsernameController {
+public class UsernameController extends BaseController {
     private final UserInfoResolverService userInfoResolverService;
     private final UsernameService usernameService;
 
@@ -26,7 +26,7 @@ public class UsernameController {
     }
 
 
-    @GetMapping("/changeUsername")
+    @PostMapping("/changeUsername")
     public SuccessResponse changeUsername(@Parameter(hidden = true) UUID requestedBy, @Valid @RequestBody ChangeUsernameRequest request) {
         usernameService.update(requestedBy, request.getNewUsername());
 
@@ -36,5 +36,12 @@ public class UsernameController {
     @GetMapping("/getMe")
     public GetMeResponse getMe(@Parameter(hidden = true) UUID requestedBy) {
         return userInfoResolverService.getMe(requestedBy);
+    }
+
+    @GetMapping("/validateUsername")
+    public SuccessResponse validateUsername(@RequestParam("username") String username) {
+        usernameService.validateUsername(username);
+
+        return new SuccessResponse();
     }
 }

@@ -14,7 +14,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class InputProfileModel {
+public class InputSpecialistModel {
     @NotNull
     @JsonProperty(required = true)
     private UserRealName realName;
@@ -29,6 +29,7 @@ public class InputProfileModel {
 
     @NotNull
     @JsonProperty(required = true)
+    @Size(max = 1000)
     private String bio;
 
     @NotNull

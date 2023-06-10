@@ -3,7 +3,8 @@ package com.up.upfolio.services.organization;
 import com.up.upfolio.entities.OrganizationEntity;
 import com.up.upfolio.exceptions.ErrorDescriptor;
 import com.up.upfolio.exceptions.GenericApiErrorException;
-import com.up.upfolio.model.organization.OrganizationModel;
+import com.up.upfolio.model.profile.OrganizationModel;
+import com.up.upfolio.model.profile.InputOrganizationModel;
 import com.up.upfolio.model.user.OrganizationBasicDetails;
 import com.up.upfolio.repositories.OrganizationRepository;
 import com.up.upfolio.services.media.PhotoUrlMapperService;
@@ -37,6 +38,20 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public OrganizationModel getByUuid(UUID requestedBy, @NonNull UUID target) {
         return map(organizationRepository.findById(target).orElseThrow(() -> new GenericApiErrorException(ErrorDescriptor.ACCOUNT_NOT_FOUND)));
+    }
+
+    @Override
+    public OrganizationModel editProfile(@NonNull UUID userUuid, InputOrganizationModel inputOrganizationModel) {
+        OrganizationEntity org = organizationRepository.findById(userUuid).orElseThrow(() -> new GenericApiErrorException(ErrorDescriptor.WRONG_HANDLER));
+
+        org.setDetails(inputOrganizationModel.getDetails());
+        org.setTags(inputOrganizationModel.getTags());
+        org.setBio(inputOrganizationModel.getBio());
+        org.setLocation(inputOrganizationModel.getLocation());
+
+        org = organizationRepository.save(org);
+
+        return map(org);
     }
 
     private OrganizationModel map(OrganizationEntity entity) {

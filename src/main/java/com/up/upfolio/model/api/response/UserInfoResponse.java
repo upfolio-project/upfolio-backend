@@ -1,7 +1,7 @@
 package com.up.upfolio.model.api.response;
 
-import com.up.upfolio.model.organization.OrganizationModel;
-import com.up.upfolio.model.profile.ProfileModel;
+import com.up.upfolio.model.profile.OrganizationModel;
+import com.up.upfolio.model.profile.SpecialistModel;
 import com.up.upfolio.model.user.UserType;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +17,6 @@ public class UserInfoResponse extends BaseApiResponse {
     private final String username;
     private final UUID userUuid;
 
-    private ProfileModel profile;
+    private SpecialistModel profile;
     private OrganizationModel organization;
 }

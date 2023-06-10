@@ -18,7 +18,7 @@ public class ProjectEntity {
     private UUID uuid;
 
     @ManyToOne
-    private ProfileEntity author;
+    private SpecialistEntity author;
 
     private OffsetDateTime created;
     private OffsetDateTime updated;

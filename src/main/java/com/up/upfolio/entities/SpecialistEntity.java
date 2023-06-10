@@ -15,8 +15,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-@Table(name = "profiles")
-public class ProfileEntity {
+@Table(name = "specialists")
+public class SpecialistEntity {
     @Id
     private UUID userUuid;
 
@@ -34,10 +34,11 @@ public class ProfileEntity {
 
     private ProfileStatus status;
 
+    @Column(length = 1000)
     private String bio;
 
     @ElementCollection
-    @CollectionTable(name = "profile_tags", joinColumns = @JoinColumn(name = "userUuid"))
+    @CollectionTable(name = "specialist_tags", joinColumns = @JoinColumn(name = "userUuid"))
     @Column(name = "tag")
     private List<String> tags;
 

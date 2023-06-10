@@ -7,5 +7,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface UsernameMappingRepository extends CrudRepository<UsernameMappingEntity, UUID> {
-    Optional<UsernameMappingEntity> findByUsername(String username);
+    Optional<UsernameMappingEntity> findByUsernameIgnoreCase(String username);
+    boolean existsByUsernameIgnoreCase(String username);
 }

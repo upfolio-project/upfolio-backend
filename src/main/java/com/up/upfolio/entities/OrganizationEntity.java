@@ -24,6 +24,7 @@ public class OrganizationEntity {
 
     private String location;
 
+    @Column(length = 1000)
     private String bio;
 
     @ElementCollection

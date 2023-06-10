@@ -9,7 +9,8 @@ public enum ErrorDescriptor {
     BAD_PHONE_NUMBER("Bad phone number"),
     REGISTRATION_STEPS_FAULT("Registration steps fault, please reload the page"),
     OTP_ATTEMPTS_EXCEEDED("Too many OTP attempts"),
-    BAD_USER_NAME("Bad user name"),
+    BAD_USERNAME("Bad username"),
+    USERNAME_IS_TAKEN("This username is already taken"),
     BAD_ORGANIZATION_INFO("Bad organization details"),
     REGISTRATION_TOKEN_IS_NOT_PROVIDED(HttpServletResponse.SC_FORBIDDEN, "Missing valid registration token"),
     PROFILE_NOT_FOUND(HttpServletResponse.SC_NOT_FOUND, "Profile not found"),
@@ -23,7 +24,8 @@ public enum ErrorDescriptor {
     CANNOT_EDIT_THIS_PROJECT(HttpServletResponse.SC_FORBIDDEN, "Sorry, you cannot edit this project"),
     PHOTO_DIMENSIONS_ARE_INVALID(HttpServletResponse.SC_BAD_REQUEST, "Sorry, the photo dimensions you provided are incorrect"),
     PHOTO_IS_INVALID(HttpServletResponse.SC_BAD_REQUEST, "Sorry, this photo format is not supported"),
-    WRONG_FINISH_HANDLER(HttpServletResponse.SC_BAD_REQUEST, "Wrong finish API handler, use appropriate handler based on your registration type");
+    WRONG_FINISH_HANDLER(HttpServletResponse.SC_BAD_REQUEST, "Wrong finish API handler, use appropriate handler based on your registration type"),
+    WRONG_HANDLER(HttpServletResponse.SC_BAD_REQUEST, "Your account type does not support execution of this handler");
 
     private final String description;
     private final int status;

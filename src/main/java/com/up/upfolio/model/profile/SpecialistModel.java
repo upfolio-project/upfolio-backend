@@ -17,7 +17,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Schema(name = "Profile")
-public class ProfileModel {
+public class SpecialistModel {
     // public info
     private UUID userUuid;
     private UserRealName realName;

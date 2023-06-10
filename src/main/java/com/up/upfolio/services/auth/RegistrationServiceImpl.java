@@ -15,7 +15,7 @@ import com.up.upfolio.services.auth.otp.ConfirmationMethodSelector;
 import com.up.upfolio.services.auth.otp.OtpCodeGenerator;
 import com.up.upfolio.services.auth.otp.OtpCodeTransmitter;
 import com.up.upfolio.services.organization.OrganizationService;
-import com.up.upfolio.services.profile.ProfileService;
+import com.up.upfolio.services.profile.SpecialistService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -38,7 +38,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final Base64.Encoder base64Encoder = Base64.getUrlEncoder();
     private final SecureRandom secureRandom;
     private final OtpCodeTransmitter otpCodeTransmitter;
-    private final ProfileService profileService;
+    private final SpecialistService specialistService;
     private final OrganizationService organizationService;
     private final ConfirmationMethodSelector confirmationMethodSelector;
 
@@ -47,7 +47,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     public RegistrationServiceImpl(OtpCodeGenerator otpCodeGenerator, PasswordEncoder passwordEncoder, PhoneNumberNormalizer phoneNumberNormalizer,
                                    UserRepository userRepository, JwtAuthenticationService jwtAuthenticationService, SecureRandom secureRandom,
-                                   OtpCodeTransmitter otpCodeTransmitter, ProfileService profileService, JwtRefreshTokenService jwtRefreshTokenService,
+                                   OtpCodeTransmitter otpCodeTransmitter, SpecialistService specialistService, JwtRefreshTokenService jwtRefreshTokenService,
                                    ConfirmationMethodSelector confirmationMethodSelector, OrganizationService organizationService) {
 
         stateHolder = CacheBuilder.newBuilder().maximumSize(MAX_REGISTRATIONS).build();
@@ -59,7 +59,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         this.otpCodeGenerator = otpCodeGenerator;
         this.secureRandom = secureRandom;
         this.otpCodeTransmitter = otpCodeTransmitter;
-        this.profileService = profileService;
+        this.specialistService = specialistService;
         this.jwtRefreshTokenService = jwtRefreshTokenService;
         this.confirmationMethodSelector = confirmationMethodSelector;
         this.organizationService = organizationService;
@@ -185,7 +185,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void createPlatformEntity(UserEntity user, UserRealName realName) {
-        profileService.createBlankProfile(user.getUuid(), realName);
+        specialistService.createBlankProfile(user.getUuid(), realName);
     }
 
     private void createPlatformEntity(UserEntity user, OrganizationBasicDetails organizationBasicDetails) {

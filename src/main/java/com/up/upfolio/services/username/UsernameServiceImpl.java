@@ -16,6 +16,7 @@ import java.util.UUID;
 @Component
 public class UsernameServiceImpl implements UsernameService {
     private final UsernameMappingRepository usernameMappingRepository;
+    private final UsernameStaticValidatorService validatorService;
 
     @Override
     public UUID resolve(String username) {
@@ -29,7 +30,7 @@ public class UsernameServiceImpl implements UsernameService {
 
     @Override
     public String create(UUID userUuid, String newUsername) {
-        newUsername = UsernameService.sanitize(newUsername);
+        validateUsername(newUsername);
 
         UsernameMappingEntity entity = new UsernameMappingEntity();
         entity.setUsername(newUsername);
@@ -45,7 +46,7 @@ public class UsernameServiceImpl implements UsernameService {
 
     @Override
     public String update(UUID userUuid, String newUsername) {
-        newUsername = UsernameService.sanitize(newUsername);
+        validateUsername(newUsername);
 
         UsernameMappingEntity entity = usernameMappingRepository.findById(userUuid).orElseThrow(() -> new GenericApiErrorException(ErrorDescriptor.ACCOUNT_NOT_FOUND));
 
@@ -57,9 +58,13 @@ public class UsernameServiceImpl implements UsernameService {
     }
 
     private UsernameMappingEntity get(String username) {
-        username = UsernameService.sanitize(username);
+        return usernameMappingRepository.findByUsernameIgnoreCase(username).orElseThrow(() -> new GenericApiErrorException(ErrorDescriptor.ACCOUNT_NOT_FOUND));
+    }
 
-        return usernameMappingRepository.findByUsername(username).orElseThrow(() -> new GenericApiErrorException(ErrorDescriptor.ACCOUNT_NOT_FOUND));
+    public void validateUsername(String username) {
+        if (!validatorService.isValid(username)) throw new GenericApiErrorException(ErrorDescriptor.BAD_USERNAME);
+        if (usernameMappingRepository.existsByUsernameIgnoreCase(username))
+            throw new GenericApiErrorException(ErrorDescriptor.USERNAME_IS_TAKEN);
     }
 
     private String generateRandomUsername() {

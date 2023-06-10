@@ -7,7 +7,7 @@ import com.up.upfolio.model.api.response.profile.GetMeResponse;
 import com.up.upfolio.model.user.UserType;
 import com.up.upfolio.repositories.UserRepository;
 import com.up.upfolio.services.organization.OrganizationService;
-import com.up.upfolio.services.profile.ProfileService;
+import com.up.upfolio.services.profile.SpecialistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -19,7 +19,7 @@ import java.util.UUID;
 public class UserInfoResolverServiceImpl implements UserInfoResolverService {
     private final UsernameService usernameService;
     private final OrganizationService organizationService;
-    private final ProfileService profileService;
+    private final SpecialistService specialistService;
     private final UserRepository userRepository;
 
     @Value("${upfolio.host:https://upfolio.ru}")
@@ -35,7 +35,7 @@ public class UserInfoResolverServiceImpl implements UserInfoResolverService {
         UserInfoResponse response = new UserInfoResponse(type, username, userUuid);
 
         switch (type) {
-            case SPECIALIST -> response.setProfile(profileService.getByUuid(requestedBy, userUuid));
+            case SPECIALIST -> response.setProfile(specialistService.getByUuid(requestedBy, userUuid));
             case ORGANIZATION -> response.setOrganization(organizationService.getByUuid(requestedBy, userUuid));
             default -> throw new IllegalStateException("Unexpected value: " + type);
         }

@@ -1,7 +1,7 @@
 package com.up.upfolio.services.media;
 
 import com.up.upfolio.model.api.response.SuccessResponse;
-import com.up.upfolio.services.profile.ProfileService;
+import com.up.upfolio.services.profile.SpecialistService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Component;
@@ -12,7 +12,7 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 public class PhotoUploaderServiceImpl implements PhotoUploaderService {
-    private final ProfileService profileService;
+    private final SpecialistService specialistService;
     private final S3StorageService s3StorageService;
     private final PhotoConverterService photoConverterService;
 
@@ -22,7 +22,7 @@ public class PhotoUploaderServiceImpl implements PhotoUploaderService {
 
         String key = s3StorageService.uploadPhoto(result.getLeft(), result.getRight());
 
-        profileService.updateProfilePhotoKey(userUuid, key);
+        specialistService.updateProfilePhotoKey(userUuid, key);
 
         return new SuccessResponse();
     }

@@ -1,13 +1,13 @@
 package com.up.upfolio.services.projects;
 
-import com.up.upfolio.entities.ProfileEntity;
+import com.up.upfolio.entities.SpecialistEntity;
 import com.up.upfolio.entities.ProjectEntity;
 import com.up.upfolio.exceptions.ErrorDescriptor;
 import com.up.upfolio.exceptions.GenericApiErrorException;
 import com.up.upfolio.model.projects.InputProjectModel;
 import com.up.upfolio.model.projects.ProjectModel;
 import com.up.upfolio.repositories.ProjectsRepository;
-import com.up.upfolio.services.profile.ProfileService;
+import com.up.upfolio.services.profile.SpecialistService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,13 +25,13 @@ import java.util.UUID;
 @Slf4j
 @RequiredArgsConstructor
 public class ProjectsServiceImpl implements ProjectsService {
-    private final ProfileService profileService;
+    private final SpecialistService specialistService;
     private final ProjectsRepository projectsRepository;
     private final ModelMapper modelMapper;
 
     @Override
-    public ProjectModel createProject(UUID requestedBy, InputProjectModel inputProjectModel) {
-        ProfileEntity profile = profileService.getByUuid(requestedBy);
+    public ProjectModel createProject(UUID userUuid, InputProjectModel inputProjectModel) {
+        SpecialistEntity profile = specialistService.getByUuid(userUuid, true);
 
         ProjectEntity project = new ProjectEntity();
 
@@ -44,7 +44,7 @@ public class ProjectsServiceImpl implements ProjectsService {
         project.setDescription(inputProjectModel.getDescription());
 
         project = projectsRepository.save(project);
-        profileService.attachProject(profile, project);
+        specialistService.attachProject(profile, project);
 
         return modelMapper.map(project, ProjectModel.class);
     }
@@ -59,7 +59,7 @@ public class ProjectsServiceImpl implements ProjectsService {
 
     @Override
     public List<ProjectModel> getUserProjects(@Nullable UUID requestedBy, UUID userUuid) {
-        ProfileEntity target = profileService.getByUuid(userUuid);
+        SpecialistEntity target = specialistService.getByUuid(userUuid, false);
         checkCanViewProjects(requestedBy, target);
 
         return target.getProjects().stream().map(p -> modelMapper.map(p, ProjectModel.class)).toList();
@@ -84,7 +84,7 @@ public class ProjectsServiceImpl implements ProjectsService {
             throw new GenericApiErrorException(ErrorDescriptor.PROJECT_NOT_FOUND);
     }
 
-    private void checkCanViewProjects(@Nullable UUID requestedBy, ProfileEntity target) {
+    private void checkCanViewProjects(@Nullable UUID requestedBy, SpecialistEntity target) {
         if (target.getUserUuid().equals(requestedBy) || !target.isPrivate()) return;
 
         throw new GenericApiErrorException(ErrorDescriptor.CANNOT_VIEW_THIS_PROFILE);

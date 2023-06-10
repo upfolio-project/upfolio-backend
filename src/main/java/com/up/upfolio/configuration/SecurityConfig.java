@@ -56,11 +56,12 @@ public class SecurityConfig {
                         .authenticationEntryPoint(unauthorizedController)
                         .accessDeniedPage("/error")
                 ).authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/v1/validateUsername").permitAll()
                         .requestMatchers("/v1/register/**").permitAll()
                         .requestMatchers("/v1/authorize/**").permitAll()
                         .requestMatchers("/v1/projects/user/**").permitAll()
                         .requestMatchers("/v1/projects/project/**").permitAll()
-                        .requestMatchers("/v1/profile/user/**").permitAll()
+                        .requestMatchers("/v1/getByUsername/user/**").permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/**").permitAll()

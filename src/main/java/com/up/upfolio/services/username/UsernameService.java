@@ -14,7 +14,5 @@ public interface UsernameService {
 
     String resolve(UUID userUuid);
 
-    static String sanitize(String username) {
-        return username.toLowerCase().strip();
-    }
+    void validateUsername(String username);
 }

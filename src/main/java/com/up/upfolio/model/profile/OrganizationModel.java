@@ -1,4 +1,4 @@
-package com.up.upfolio.model.organization;
+package com.up.upfolio.model.profile;
 
 import com.up.upfolio.model.user.OrganizationBasicDetails;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -16,4 +16,6 @@ public class OrganizationModel {
     private Boolean verified;
     private OffsetDateTime registered;
     private OrganizationBasicDetails details;
+    private String bio;
+    private String location;
 }
