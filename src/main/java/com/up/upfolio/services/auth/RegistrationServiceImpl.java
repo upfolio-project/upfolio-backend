@@ -5,12 +5,16 @@ import com.google.common.cache.CacheBuilder;
 import com.up.upfolio.entities.UserEntity;
 import com.up.upfolio.exceptions.ErrorDescriptor;
 import com.up.upfolio.exceptions.GenericApiErrorException;
+import com.up.upfolio.model.user.OrganizationBasicDetails;
+import com.up.upfolio.model.user.UserType;
 import com.up.upfolio.model.api.response.auth.JwtSuccessAuthResponse;
-import com.up.upfolio.entities.UserRealName;
-import com.up.upfolio.model.api.response.auth.OtpSentResponse;
+import com.up.upfolio.model.user.UserRealName;
+import com.up.upfolio.model.api.response.register.OtpSentResponse;
 import com.up.upfolio.repositories.UserRepository;
+import com.up.upfolio.services.auth.otp.ConfirmationMethodSelector;
 import com.up.upfolio.services.auth.otp.OtpCodeGenerator;
 import com.up.upfolio.services.auth.otp.OtpCodeTransmitter;
+import com.up.upfolio.services.organization.OrganizationService;
 import com.up.upfolio.services.profile.ProfileService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -35,13 +39,16 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final SecureRandom secureRandom;
     private final OtpCodeTransmitter otpCodeTransmitter;
     private final ProfileService profileService;
+    private final OrganizationService organizationService;
+    private final ConfirmationMethodSelector confirmationMethodSelector;
 
     private static final int MAX_REGISTRATIONS = 100;
     private static final int MAX_OTP_ATTEMPTS = 5;
 
     public RegistrationServiceImpl(OtpCodeGenerator otpCodeGenerator, PasswordEncoder passwordEncoder, PhoneNumberNormalizer phoneNumberNormalizer,
                                    UserRepository userRepository, JwtAuthenticationService jwtAuthenticationService, SecureRandom secureRandom,
-                                   OtpCodeTransmitter otpCodeTransmitter, ProfileService profileService, JwtRefreshTokenService jwtRefreshTokenService) {
+                                   OtpCodeTransmitter otpCodeTransmitter, ProfileService profileService, JwtRefreshTokenService jwtRefreshTokenService,
+                                   ConfirmationMethodSelector confirmationMethodSelector, OrganizationService organizationService) {
 
         stateHolder = CacheBuilder.newBuilder().maximumSize(MAX_REGISTRATIONS).build();
 
@@ -54,15 +61,17 @@ public class RegistrationServiceImpl implements RegistrationService {
         this.otpCodeTransmitter = otpCodeTransmitter;
         this.profileService = profileService;
         this.jwtRefreshTokenService = jwtRefreshTokenService;
+        this.confirmationMethodSelector = confirmationMethodSelector;
+        this.organizationService = organizationService;
     }
 
     @Override
-    public String getRegisterToken() {
+    public String getRegisterToken(UserType userType) {
         byte[] bytes = new byte[24];
         secureRandom.nextBytes(bytes);
 
         String token = base64Encoder.encodeToString(bytes);
-        stateHolder.put(token, new RegistrationState());
+        stateHolder.put(token, new RegistrationState(userType, confirmationMethodSelector.select()));
 
         return token;
     }
@@ -80,7 +89,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         state.setStep(RegistrationState.Step.WAIT_FOR_OTP_CODE);
         state.setOtpCode(code);
 
-        if (state.getConfirmationMethod() == RegistrationState.PhoneNumberConfirmationMethod.SMS)
+        if (state.getConfirmationMethod() == RegistrationState.ConfirmationMethod.SMS)
             otpCodeTransmitter.sendCode(phoneNumber, code);
         else
             otpCodeTransmitter.makeCall(phoneNumber, code);
@@ -109,6 +118,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         return true;
     }
 
+    // todo refactor two methods below
+
     @Override
     public JwtSuccessAuthResponse finish(String registerToken, UserRealName realName, String password) {
         RegistrationState state = getState(registerToken);
@@ -116,28 +127,52 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (state.getStep() != RegistrationState.Step.WAIT_FOR_FINISH)
             throw new GenericApiErrorException(ErrorDescriptor.REGISTRATION_STEPS_FAULT);
 
-        if (!realName.checkValid())
-            throw new GenericApiErrorException(ErrorDescriptor.BAD_USER_NAME);
+        if (!UserType.SPECIALIST.equals(state.getUserType()))
+            throw new GenericApiErrorException(ErrorDescriptor.WRONG_FINISH_HANDLER);
 
+        UserEntity user = createUserEntity(state.getPhoneNumber(), state.getUserType(), password);
+        createPlatformEntity(user, realName);
+
+        return authorizeInitial(registerToken, user);
+    }
+
+    @Override
+    public JwtSuccessAuthResponse finish(String registerToken, OrganizationBasicDetails organizationBasicDetails, String password) {
+        RegistrationState state = getState(registerToken);
+
+        if (state.getStep() != RegistrationState.Step.WAIT_FOR_FINISH)
+            throw new GenericApiErrorException(ErrorDescriptor.REGISTRATION_STEPS_FAULT);
+
+        if (!UserType.ORGANIZATION.equals(state.getUserType()))
+            throw new GenericApiErrorException(ErrorDescriptor.WRONG_FINISH_HANDLER);
+
+        UserEntity user = createUserEntity(state.getPhoneNumber(), state.getUserType(), password);
+        createPlatformEntity(user, organizationBasicDetails);
+
+        return authorizeInitial(registerToken, user);
+    }
+
+
+    @Override
+    public int getMaxOtpAttempts() {
+        return MAX_OTP_ATTEMPTS;
+    }
+
+    private UserEntity createUserEntity(String phoneNumber, UserType userType, String password) {
         UserEntity user = new UserEntity();
-        user.setName(realName);
-        user.setPhoneNumber(state.getPhoneNumber());
+        user.setPhoneNumber(phoneNumber);
         user.setPasswordHash(passwordEncoder.encode(password));
-        user = userRepository.save(user);
+        user.setUserType(userType);
+        return userRepository.save(user);
+    }
 
-        profileService.createBlankProfile(user.getUuid(), realName);
-
+    private JwtSuccessAuthResponse authorizeInitial(String registerToken, UserEntity user) {
         stateHolder.invalidate(registerToken);
 
         String jwtToken = jwtAuthenticationService.generate(user.getUuid());
         String jwtRefreshToken = jwtRefreshTokenService.createRefreshToken(user);
 
         return new JwtSuccessAuthResponse(jwtToken, jwtRefreshToken);
-    }
-
-    @Override
-    public int getMaxOtpAttempts() {
-        return MAX_OTP_ATTEMPTS;
     }
 
     private RegistrationState getState(String registerToken) {
@@ -147,5 +182,13 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new GenericApiErrorException(ErrorDescriptor.REGISTRATION_TOKEN_IS_NOT_PROVIDED);
 
         return state;
+    }
+
+    private void createPlatformEntity(UserEntity user, UserRealName realName) {
+        profileService.createBlankProfile(user.getUuid(), realName);
+    }
+
+    private void createPlatformEntity(UserEntity user, OrganizationBasicDetails organizationBasicDetails) {
+        organizationService.createBlankOrganization(user.getUuid(), organizationBasicDetails);
     }
 }

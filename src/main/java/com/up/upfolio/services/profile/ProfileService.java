@@ -2,25 +2,24 @@ package com.up.upfolio.services.profile;
 
 import com.up.upfolio.entities.ProfileEntity;
 import com.up.upfolio.entities.ProjectEntity;
-import com.up.upfolio.entities.UserRealName;
-import com.up.upfolio.model.api.response.profile.GetMeResponse;
+import com.up.upfolio.model.user.UserRealName;
 import com.up.upfolio.model.profile.InputProfileModel;
 import com.up.upfolio.model.profile.ProfileModel;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 import java.util.UUID;
 
 public interface ProfileService {
-    void createBlankProfile(UUID userUuid, UserRealName realName);
+    void createBlankProfile(@NonNull UUID requestedBy, UserRealName realName);
 
-    ProfileModel getProfile(UUID userUuid, String username);
+    ProfileModel getByUuid(@Nullable UUID requestedBy, @NonNull UUID target);
 
-    ProfileModel editProfile(UUID userUuid, InputProfileModel editProfile);
-
-    GetMeResponse getMe(UUID userUuid);
+    ProfileModel editProfile(@NonNull UUID requestedBy, InputProfileModel editProfile);
 
     ProfileEntity getByUuid(UUID uuid);
 
     void attachProject(ProfileEntity profile, ProjectEntity project);
 
-    void updateProfilePhotoKey(UUID userUuid, String key);
+    void updateProfilePhotoKey(@NonNull UUID requestedBy, String key);
 }

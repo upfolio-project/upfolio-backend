@@ -12,7 +12,6 @@ import java.util.UUID;
 @Setter
 public class ProjectModel {
     private UUID uuid;
-    private String authorUsername;
     private UUID authorUuid;
     private OffsetDateTime created;
     private OffsetDateTime updated;

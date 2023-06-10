@@ -8,8 +8,8 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = NullOrNotBlankValidator.class)
-public @interface NullOrNotBlank {
-    String message() default "{constraints.NullOrNotBlank.message}";
+public @interface NullOrNotBlankConstraint {
+    String message() default "{constraints.NullOrNotBlankConstraint.message}";
 
     Class<?>[] groups() default {};
 

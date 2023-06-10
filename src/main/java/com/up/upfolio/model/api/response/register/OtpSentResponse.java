@@ -1,4 +1,4 @@
-package com.up.upfolio.model.api.response.auth;
+package com.up.upfolio.model.api.response.register;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.up.upfolio.model.api.response.SuccessResponse;
@@ -12,7 +12,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class OtpSentResponse extends SuccessResponse {
     @JsonProperty("confirmationMethod")
-    private final RegistrationState.PhoneNumberConfirmationMethod confirmationMethod;
+    private final RegistrationState.ConfirmationMethod confirmationMethod;
 
     @JsonProperty("phoneNumber")
     private final String phoneNumber;

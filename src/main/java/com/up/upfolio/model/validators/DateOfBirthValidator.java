@@ -6,7 +6,7 @@ import jakarta.validation.ConstraintValidatorContext;
 import java.time.LocalDate;
 
 public class DateOfBirthValidator implements ConstraintValidator<DateOfBirthConstraint, LocalDate> {
-    public void initialize(NullOrNotBlank parameters) {
+    public void initialize(NullOrNotBlankConstraint parameters) {
 
     }
 

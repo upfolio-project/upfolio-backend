@@ -1,7 +1,11 @@
 package com.up.upfolio.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import com.up.upfolio.model.user.UserType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -27,11 +31,11 @@ public class UserEntity implements UserDetails {
     @Size(min = 6, max = 11, message = "Phone number must be between 2 and 32 characters long")
     private String phoneNumber;
 
-    @NotNull(message = "Username must not be blank")
-    private UserRealName name;
-
     @JsonIgnore
     private String passwordHash;
+
+    @NotNull
+    private UserType userType;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -45,7 +49,7 @@ public class UserEntity implements UserDetails {
 
     @Override
     public String getUsername() {
-       return phoneNumber;
+        return phoneNumber;
     }
 
     @Override

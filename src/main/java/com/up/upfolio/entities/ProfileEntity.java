@@ -2,8 +2,8 @@ package com.up.upfolio.entities;
 
 import com.up.upfolio.model.profile.ProfileStatus;
 import com.up.upfolio.model.profile.ProfileType;
+import com.up.upfolio.model.user.UserRealName;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,10 +19,6 @@ import java.util.UUID;
 public class ProfileEntity {
     @Id
     private UUID userUuid;
-
-    @Column(unique = true)
-    @NotBlank
-    private String username;
 
     private UserRealName realName;
 

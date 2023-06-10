@@ -3,10 +3,9 @@ package com.up.upfolio.services.profile;
 import com.up.upfolio.entities.ProfileEntity;
 import com.up.upfolio.model.profile.ProfileModel;
 import com.up.upfolio.model.profile.ProfileType;
-import com.up.upfolio.services.media.S3StorageService;
+import com.up.upfolio.services.media.PhotoUrlMapperService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -15,11 +14,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProfileMapper {
     private final ModelMapper modelMapper;
-
-    @Value("${upfolio.host:https://upfolio.ru}")
-    private String baseHost;
-
-    private final S3StorageService s3StorageService;
+    private final PhotoUrlMapperService photoUrlMapperService;
 
     public ProfileModel map(UUID userUuid, ProfileEntity profile) {
         if (ProfileType.PRIVATE.equals(profile.getType()) && !profile.getUserUuid().equals(userUuid))
@@ -40,9 +35,8 @@ public class ProfileMapper {
 
         profileModel.setType(profile.getType());
         profileModel.setRegistered(profile.getRegistered());
-        profileModel.setUsername(profile.getUsername());
         profileModel.setRealName(profile.getRealName());
-        profileModel.setProfilePhotoUrl(baseHost + "/assets/private.png");
+        profileModel.setProfilePhotoUrl(photoUrlMapperService.getPrivatePhotoPlaceholderUrl());
         profileModel.setVerified(profile.getVerified());
         profileModel.setUserUuid(profile.getUserUuid());
 
@@ -50,12 +44,6 @@ public class ProfileMapper {
     }
 
     private String mapProfilePhotoUrl(ProfileEntity profile) {
-        String key = profile.getProfilePhotoKey();
-
-        if (key == null || key.length() == 0) {
-            return baseHost + "/assets/no-img.png";
-        }
-
-        return s3StorageService.getPhotoUrl(key);
+        return photoUrlMapperService.mapProfilePhotoUrl(profile.getProfilePhotoKey());
     }
 }

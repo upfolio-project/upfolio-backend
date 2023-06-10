@@ -18,12 +18,12 @@ public class AuthorizeController extends BaseController {
     private final UpfolioUserDetailsService userService;
 
     @PostMapping("/byPassword")
-    public JwtSuccessAuthResponse byPassword(@RequestBody @Valid AuthorizeByPasswordRequest request) {
+    public JwtSuccessAuthResponse byPassword(@Valid @RequestBody AuthorizeByPasswordRequest request) {
         return userService.authorizeByPassword(request.getPhoneNumber(), request.getPassword());
     }
 
     @PostMapping("/refresh")
-    public JwtSuccessAuthResponse byRefreshToken(@RequestBody @Valid JwtRefreshTokenRequest request) {
+    public JwtSuccessAuthResponse byRefreshToken(@Valid @RequestBody JwtRefreshTokenRequest request) {
         return userService.refreshJwt(request.getRefreshToken());
     }
 }

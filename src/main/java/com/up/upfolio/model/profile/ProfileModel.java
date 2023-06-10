@@ -1,7 +1,7 @@
 package com.up.upfolio.model.profile;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.up.upfolio.entities.UserRealName;
+import com.up.upfolio.model.user.UserRealName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,7 +20,6 @@ import java.util.UUID;
 public class ProfileModel {
     // public info
     private UUID userUuid;
-    private String username;
     private UserRealName realName;
     private OffsetDateTime registered;
     private ProfileType type;

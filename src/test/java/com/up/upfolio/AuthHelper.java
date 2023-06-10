@@ -1,6 +1,6 @@
 package com.up.upfolio;
 
-import com.up.upfolio.entities.UserRealName;
+import com.up.upfolio.model.user.UserRealName;
 import com.up.upfolio.model.api.response.auth.JwtSuccessAuthResponse;
 import com.up.upfolio.services.auth.RegistrationService;
 import com.up.upfolio.services.auth.otp.OtpCodeGenerator;
