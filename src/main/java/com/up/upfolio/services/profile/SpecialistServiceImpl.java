@@ -9,7 +9,7 @@ import com.up.upfolio.model.profile.ProfileStatus;
 import com.up.upfolio.model.profile.ProfileType;
 import com.up.upfolio.model.profile.SpecialistModel;
 import com.up.upfolio.model.user.UserRealName;
-import com.up.upfolio.repositories.ProfileRepository;
+import com.up.upfolio.repositories.SpecialistRepository;
 import com.up.upfolio.services.username.UsernameService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ import java.util.UUID;
 @Slf4j
 @Transactional
 public class SpecialistServiceImpl implements SpecialistService {
-    private final ProfileRepository profileRepository;
+    private final SpecialistRepository specialistRepository;
     private final SpecialistProfileMapper specialistProfileMapper;
     private final UsernameService usernameService;
 
@@ -42,13 +42,13 @@ public class SpecialistServiceImpl implements SpecialistService {
         profile.setRealName(realName);
         profile.setUserUuid(userUuid);
 
-        profileRepository.save(profile);
+        specialistRepository.save(profile);
         usernameService.create(userUuid);
     }
 
     @Override
     public SpecialistModel getByUuid(@Nullable UUID requestedBy, @NonNull UUID target) {
-        SpecialistEntity profile = profileRepository.findById(target).orElseThrow(() -> new GenericApiErrorException(ErrorDescriptor.ACCOUNT_NOT_FOUND));
+        SpecialistEntity profile = specialistRepository.findById(target).orElseThrow(() -> new GenericApiErrorException(ErrorDescriptor.ACCOUNT_NOT_FOUND));
 
         return specialistProfileMapper.map(requestedBy, profile);
     }
@@ -56,7 +56,7 @@ public class SpecialistServiceImpl implements SpecialistService {
 
     @Override
     public SpecialistModel editProfile(@NonNull UUID userUuid, InputSpecialistModel editProfile) {
-        SpecialistEntity profile = profileRepository.findById(userUuid).orElseThrow(() -> new GenericApiErrorException(ErrorDescriptor.WRONG_HANDLER));
+        SpecialistEntity profile = specialistRepository.findById(userUuid).orElseThrow(() -> new GenericApiErrorException(ErrorDescriptor.WRONG_HANDLER));
 
         profile.setDateOfBirth(editProfile.getDateOfBirth());
         profile.setTags(editProfile.getTags());
@@ -66,26 +66,26 @@ public class SpecialistServiceImpl implements SpecialistService {
         profile.setType(editProfile.getType());
         profile.setRealName(editProfile.getRealName());
 
-        profile = profileRepository.save(profile);
+        profile = specialistRepository.save(profile);
 
         return specialistProfileMapper.map(userUuid, profile);
     }
 
     @Override
     public SpecialistEntity getByUuid(UUID uuid, boolean selfAccess) {
-        return profileRepository.findById(uuid).orElseThrow(() -> new GenericApiErrorException((selfAccess) ? ErrorDescriptor.WRONG_HANDLER : ErrorDescriptor.ACCOUNT_NOT_FOUND));
+        return specialistRepository.findById(uuid).orElseThrow(() -> new GenericApiErrorException((selfAccess) ? ErrorDescriptor.WRONG_HANDLER : ErrorDescriptor.ACCOUNT_NOT_FOUND));
     }
 
     @Override
     public void attachProject(SpecialistEntity profile, ProjectEntity project) {
         profile.getProjects().add(project);
-        profileRepository.save(profile);
+        specialistRepository.save(profile);
     }
 
     @Override
     public void updateProfilePhotoKey(@NonNull UUID userUuid, String key) {
         SpecialistEntity profile = getByUuid(userUuid, true);
         profile.setProfilePhotoKey(key);
-        profileRepository.save(profile);
+        specialistRepository.save(profile);
     }
 }
