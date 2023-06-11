@@ -19,9 +19,9 @@ import java.util.UUID;
 public class ProjectsController extends BaseController {
     private final ProjectsService projectsService;
 
-    @GetMapping("/user/{userUuid}")
-    public GetProjectsResponse getUserProjects(@Nullable @Parameter(hidden = true) UUID requestedBy, @PathVariable UUID userUuid) {
-        List<ProjectModel> projects = projectsService.getUserProjects(requestedBy, userUuid);
+    @GetMapping("/specialist/{userUuid}")
+    public GetProjectsResponse getSpecialistProjects(@Nullable @Parameter(hidden = true) UUID requestedBy, @PathVariable UUID userUuid) {
+        List<ProjectModel> projects = projectsService.getSpecialistProjects(requestedBy, userUuid);
         return new GetProjectsResponse(userUuid, projects);
     }
 

@@ -11,7 +11,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-@Table(name = "profiles")
+@Table(name = "organizations")
 public class OrganizationEntity {
     @Id
     private UUID userUuid;
@@ -24,13 +24,16 @@ public class OrganizationEntity {
 
     private String location;
 
-    @Column(length = 1000)
+    @Column(length = 1000, nullable = false)
     private String bio;
 
     @ElementCollection
     @CollectionTable(name = "organization_tags", joinColumns = @JoinColumn(name = "userUuid"))
     @Column(name = "tag")
     private List<String> tags;
+
+    @OneToMany
+    private List<JobEntity> jobs;
 
     private Boolean verified;
 

@@ -31,7 +31,8 @@ public class UsernameStaticValidatorService {
             "mailru",
             "jetbrains",
             "delmir",
-            "emmitrin"
+            "emmitrin",
+            "create"
     );
 
     public boolean isValid(String username) {

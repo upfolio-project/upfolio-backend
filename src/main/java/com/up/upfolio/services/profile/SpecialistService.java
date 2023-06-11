@@ -17,7 +17,7 @@ public interface SpecialistService {
 
     SpecialistModel editProfile(@NonNull UUID requestedBy, InputSpecialistModel editProfile);
 
-    SpecialistEntity getByUuid(UUID uuid, boolean isSelfAccess);
+    SpecialistEntity getByUuid(UUID uuid, boolean selfAccess);
 
     void attachProject(SpecialistEntity profile, ProjectEntity project);
 

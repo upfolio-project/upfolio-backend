@@ -12,7 +12,7 @@ public interface ProjectsService {
 
     ProjectModel getProject(@Nullable UUID requestedBy, UUID projectUuid);
 
-    List<ProjectModel> getUserProjects(@Nullable UUID requestedBy, UUID userUuid);
+    List<ProjectModel> getSpecialistProjects(@Nullable UUID requestedBy, UUID userUuid);
 
-    ProjectModel updateProject(UUID requestedBy, UUID uuid, InputProjectModel inputProjectModel);
+    ProjectModel updateProject(UUID requestedBy, UUID projectUuid, InputProjectModel inputProjectModel);
 }

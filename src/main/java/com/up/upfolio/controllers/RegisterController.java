@@ -26,7 +26,7 @@ public class RegisterController extends BaseController {
 
     @GetMapping("/getRegisterToken")
     public RegisterTokenResponse getRegisterToken(@RequestParam(value = "type", defaultValue = "SPECIALIST") UserType type) {
-        String token = registrationService.getRegisterToken();
+        String token = registrationService.getRegisterToken(type);
         return new RegisterTokenResponse(token, type);
     }
 

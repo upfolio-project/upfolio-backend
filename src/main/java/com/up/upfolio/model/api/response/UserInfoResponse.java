@@ -17,6 +17,6 @@ public class UserInfoResponse extends BaseApiResponse {
     private final String username;
     private final UUID userUuid;
 
-    private SpecialistModel profile;
+    private SpecialistModel specialist;
     private OrganizationModel organization;
 }

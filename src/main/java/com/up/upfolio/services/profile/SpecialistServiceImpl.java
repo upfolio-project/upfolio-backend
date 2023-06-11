@@ -72,8 +72,8 @@ public class SpecialistServiceImpl implements SpecialistService {
     }
 
     @Override
-    public SpecialistEntity getByUuid(UUID uuid, boolean isSelfAccess) {
-        return profileRepository.findById(uuid).orElseThrow(() -> new GenericApiErrorException((isSelfAccess) ? ErrorDescriptor.WRONG_HANDLER : ErrorDescriptor.ACCOUNT_NOT_FOUND));
+    public SpecialistEntity getByUuid(UUID uuid, boolean selfAccess) {
+        return profileRepository.findById(uuid).orElseThrow(() -> new GenericApiErrorException((selfAccess) ? ErrorDescriptor.WRONG_HANDLER : ErrorDescriptor.ACCOUNT_NOT_FOUND));
     }
 
     @Override

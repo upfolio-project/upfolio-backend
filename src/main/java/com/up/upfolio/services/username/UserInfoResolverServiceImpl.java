@@ -35,8 +35,8 @@ public class UserInfoResolverServiceImpl implements UserInfoResolverService {
         UserInfoResponse response = new UserInfoResponse(type, username, userUuid);
 
         switch (type) {
-            case SPECIALIST -> response.setProfile(specialistService.getByUuid(requestedBy, userUuid));
-            case ORGANIZATION -> response.setOrganization(organizationService.getByUuid(requestedBy, userUuid));
+            case SPECIALIST -> response.setSpecialist(specialistService.getByUuid(requestedBy, userUuid));
+            case ORGANIZATION -> response.setOrganization(organizationService.getByUuid(requestedBy, false));
             default -> throw new IllegalStateException("Unexpected value: " + type);
         }
 

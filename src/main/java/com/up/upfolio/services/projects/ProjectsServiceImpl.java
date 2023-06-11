@@ -58,7 +58,7 @@ public class ProjectsServiceImpl implements ProjectsService {
     }
 
     @Override
-    public List<ProjectModel> getUserProjects(@Nullable UUID requestedBy, UUID userUuid) {
+    public List<ProjectModel> getSpecialistProjects(@Nullable UUID requestedBy, UUID userUuid) {
         SpecialistEntity target = specialistService.getByUuid(userUuid, false);
         checkCanViewProjects(requestedBy, target);
 
